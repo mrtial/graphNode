@@ -1,4 +1,3 @@
-
 (function(){
 	angular.module("App", [])
   .component('app',{
@@ -7,17 +6,21 @@
   	controllerAs:'vm',
     // TODO: Use views folder & templateUrl
   	template:`
-    <div class="tool">
-  		<form>
-        <label>Starting Node</label>
-				<input type="text" ng-model="vm.text"/>
-				<button ng-click="vm.getData(vm.text)">Submit</button>
-  		</form>
-    </div>
-
-			<div id="d3_graph"></div>
+      <div>
+        <toolbar></toolbar>
+        <div id="d3_graph"></div>
+        <menu ng-show="vm.menuShow"></menu>
+        <button ng-click="vm.menuShow = !vm.menuShow">show</button>
+      </div>
   	`
   })
+  .component('toolbar',{
+    templateUrl:'./views/toolbar.html'
+  })
+  .component('menu',{
+    templateUrl:'./views/menu.html'
+  })
+
   .controller("mainController", mainController)
 
 
@@ -26,6 +29,7 @@
   // TODO: Move to controller folder
   function mainController($http){
   	var vm = this;
+    vm.menuShow = false;
 
     // GET DATA
   	vm.getData = function(id){
