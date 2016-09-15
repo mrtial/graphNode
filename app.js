@@ -1,3 +1,4 @@
+
 (function(){
 	angular.module("App", [])
   .component('app',{
@@ -33,11 +34,10 @@
   		  url: 'http://remissionaire-staging.herokuapp.com/api/v1/nodes/'+id
   		}).then(function successCallback(response) {
   		    vm.data = response.data;
-          console.log(vm.data);
 
           // RE-STRUCTURE DATA FOR D3
           var treeData = build(vm.text, vm.data);
-
+          
           // BUILD D3
           generateD3(treeData);
 
@@ -59,7 +59,6 @@
     
     var tree =    { 
       "name" : node._id,
-      "lineNumber" : 1,
       "text" : node.message_text,
       "button" : false,
       "hidden" : node.type === "hidden",
@@ -70,7 +69,6 @@
     node.buttons.forEach(function(b){
       tree.children.push({
         "name" : b.payload + "_button",
-        "lineNumber" : 1,
         "text" : b.title,
         "button" : true,
         "hidden" : b.type === "hidden",
@@ -81,15 +79,30 @@
     return tree;
   }
 
+  function delete_node(node_name,treeData){
+    removeNode()
+    if('children' in treeData)
+    {
+      treeData.children.forEach(function(t,i){
+      if(t.name === node_name){
+          treeData.children.splice(i,1);
+      }else{
+        t = delete_node(node_name,t);
+      }
+    });
+    }
+    return treeData;
+  }
+
   function generateD3(treeData){
     var margin = {top: 40, right: 120, bottom: 20, left: 120},
         width = 1200 - margin.right - margin.left,
-        height = 900 - margin.top - margin.bottom;
-      
+        height = 1200 - margin.top - margin.bottom;
+    var boxHeight = 50, boxWidth = 400;
     var i = 0;
 
     var tree = d3.layout.tree()
-                        .size([height, width]);
+                        .size([width,height]);
 
     var diagonal = d3.svg.diagonal()
       .projection(function(d) { return [d.x, d.y]; });
@@ -121,13 +134,39 @@
       var nodeEnter = node.enter().append("g")
         .attr("class", "node")
         .attr("transform", function(d) { 
-          return "translate(" + d.x + "," + d.y + ")"; });
+          return "translate(" + d.x + "," + d.y + ")"; })
+        
+        // EventListener on CLICK 
+        .on("click",function(d){
+          debugger
 
+          if(d.button){
+            delete_node(d.name,treeData);
+          }else{
+            delete_node(d.parent.name,treeData)
+          }
+          console.log(source);
+          generateD3(treeData);
+          });
+
+      //get width for each depth
+      var maxDepth = Math.max.apply(Math,d3.selectAll("g.node").data().map(function(o){return o.depth;}));
+      var numDepth = new Array(maxDepth).fill(0);
+      numDepth.forEach(function(d,i){
+        numDepth[i]=d3.selectAll("g.node").data().filter(function(d){return d.depth==(i+1)}).length
+      });
       nodeEnter.append("rect")
-        .attr("width", 280)
-        .attr("height", function(d){return(50);})
-        .attr("x", -140)
-        .attr("y", -25)
+        .attr("width",function(d){
+          var d = d3.select(this.parentNode).data()[0].depth;
+          if(d===0){
+            return boxWidth;
+          }else{
+            return Math.min( boxWidth,(width - 100)/Math.max.apply(null, numDepth.slice(0,d)));
+          }
+         })
+        .attr("x",function(d){return -1*d3.select(this).attr("width")/2;})
+        .attr("height", boxHeight)
+        .attr("y", -1*boxHeight/2)
         .attr("stroke", function(d){
           if(d.payload_type === "bubble"){
             return "#A9CCE3";
@@ -142,9 +181,12 @@
       nodeEnter.append("text")
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
-        .html(function(d) { return d.text; })
+        .html(function(d) {  return d.text; })
         .style("fill-opacity", 1)
-        .call(wrap, 260);
+        .call(wrap);
+
+      // Dynamically adjust the height and width of message box
+      d3.selectAll("rect").attr("height",function(d){return boxHeight + 10* (this.parentNode.lineNumber-1) ;})
 
       // Declare the links…
       var link = svg.selectAll("path.link")
@@ -155,8 +197,12 @@
         .attr("class", "link")
         .attr("d", diagonal);
       
-      function wrap(text, width) {
-        text.each(function() {
+      function wrap(text) {
+        text.each(function(t) {
+          var width = d3.select(this.parentNode.childNodes[0]).attr("width")-20;
+          console.log(d3.select(this.parentNode.childNodes[0]).attr("height"));
+          console.log(this.parentNode.childNodes[0]);
+
           var text = d3.select(this),
               words = text.text().split(/\s+/).reverse(),
               word,
@@ -166,6 +212,7 @@
               y = text.attr("y"),
               dy = parseFloat(text.attr("dy")),
               tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+              this.parentNode.lineNumber = 1;
           while (word = words.pop()) {
             line.push(word);
             tspan.text(line.join(" "));
@@ -177,17 +224,18 @@
               tspan = text.append("tspan").attr("x", 0).attr("y", 0).attr("dy", lineNumber * lineHeight + dy + "em").text(word);
               lineNumber = lineNumber +1;
             }
-            d3.select(this.parentNode).attr("lineNumber",lineNumber);
+            //d3.select(this.parentNode).attr("lineNumber",lineNumber);
+            this.parentNode.lineNumber = lineNumber;
           }
         });
-      }
-    } 
+      } // wrap 
+    } // update
   }
 
   function removeNode(){
-    var svg = document.getElementById('d3_graph');
-    while (svg && svg.firstChild) {
-        svg.removeChild(svg.firstChild);
+    var node = document.getElementById('d3_graph');
+    while (node && node.firstChild) {
+        node.removeChild(node.firstChild);
     }
   }
 
