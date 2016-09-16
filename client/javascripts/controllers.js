@@ -192,7 +192,16 @@
 	          return "#D98880";
 	        }
 	      })
-	      .attr("fill","#F2F2F2");
+	      .attr("fill",function(d){
+	      	if(d.button===true)
+	      	{
+	      		return d3.select(this).attr("stroke");
+	      	}else{
+	      		return "#F2F2F2";
+	      	}
+
+	      });
+
 
 	    nodeEnter.append("text")
 	      .attr("dy", ".35em")

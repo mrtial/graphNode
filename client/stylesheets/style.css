@@ -46,6 +46,8 @@ li:hover{
 
 .node rect {
   stroke-width: 3px;
+  rx:5;
+  ry:5;
 }
 
 .node text { 
