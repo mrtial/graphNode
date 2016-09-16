@@ -14,7 +14,6 @@
   		  url: 'http://remissionaire-staging.herokuapp.com/api/v1/nodes/'+id
   		}).then(function successCallback(response) {
   		    vm.data = response.data;
-  		    debugger
           // RE-STRUCTURE DATA FOR D3
           vm.treeData = build(vm.nodeID, vm.data);
           console.log(vm.data);
@@ -93,7 +92,7 @@
 	      "text" : b.title,
 	      "button" : true,
 	      "hidden" : b.type === "hidden",
-	      "payload_type" : b.payload_type,
+	      "payload_type" : b.type,
 	      "children" : [build(b.next_node_id, data)]
 	    });
 	  });
