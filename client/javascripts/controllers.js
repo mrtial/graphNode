@@ -5,6 +5,7 @@
 	function mainController($http){
 		var vm = this;
 		vm.menuShow = false;
+		vm.editType="json";
 
 
     // GET DATA
@@ -32,15 +33,25 @@
 	  	menuBox.style.top = e.clientY+"px";
 	  	menuBox.style.left = e.clientX+"px";
 
-
 	  	if(e.target.tagName==="rect"){
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__;
 	  		console.log(obj);
-	  		if(obj.button){
+	  		// btn & postback
+	  		if(obj.button && obj.payload_type === "postback"){
+	  			vm.nodeType = "button_postback";
+	  		}
+	  		// btn & not postback
+	  		else if(obj.button){
 	  			vm.nodeType = "button";
-	  		} else if(obj.payload_type === "message"){
-	  			vm.nodeType="message";
+	  		}
+	  		// msg === msg
+	  		else if(!obj.button && obj.payload_type === "message"){
+	  			vm.nodeType="message"
+	  		}
+	  		// msg != msg
+	  		else if(!obj.button && obj.payload_type === "bubble"){
+	  			vm.nodeType="bubble";
 	  		} 
 	  	} 
 

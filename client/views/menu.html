@@ -1,14 +1,48 @@
 <div class="menu">
+	<div ng-show='vm.nodeType === "button_postback"'>
+		<div class="fn">Add Message</div>
+		<div class="fn">Delete Button</div>
+		<div class="fn">Edit Button Title</div>
+		<div class="fn">Edit JSON</div>
+	</div>
 	<div ng-show='vm.nodeType === "button"'>
-		<div class="fn" ng-show='vm.btnType==="postback"'>Edit Title</div>
-		<div class="fn">ADD MESSAGE</div>
-		<div class="fn">EDIT JSON</div>
-		<div class="fn">DELETE NODE</div>
+		<div class="fn">Add Message</div>
+		<div class="fn">Delete Button</div>
+		<div class="fn">Edit JSON</div>
 	</div>
 	<div ng-show='vm.nodeType === "message"'>
-		<div class="fn" ng-show='vm.msgType==="message"'>Edit Title</div>
-		<div class="fn">ADD BUTTON</div>
-		<div class="fn">EDIT JSON</div>
-		<div class="fn">DELETE NODE</div>
+		<div class="fn">Add Button</div>
+		<div class="fn">Delete Message</div>
+		<div class="fn">Edit Message Text</div>
+		<div class="fn">Edit JSON</div>
 	</div>
+	<div ng-show='vm.nodeType === "bubble"'>
+		<div class="fn">Add Button</div>
+		<div class="fn">Delete Message</div>
+		<div class="fn">EDIT JSON</div>
+	</div>
+	<div class="editing" ng-show="vm.editType">
+		<div ng-show='vm.editType==="json"'>
+			<textarea name="" id="" cols="30" rows="10"></textarea>
+		</div>
+		<div ng-show='vm.editType==="btn_title"'>
+			
+		</div>
+		<div ng-show='vm.editType==="msg_title"'>
+			
+		</div>
+
+
+
+	</div>
+
+
+
 </div>
+
+
+
+
+
+		
+		<div class="fn" ng-show='vm.btnType==="postback"'>Edit Title</div>
