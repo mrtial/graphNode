@@ -36,8 +36,8 @@
 	  	if(e.target.tagName==="rect"){
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__;
-
-	  		vm.currentNodeName = obj.name;
+	  		console.log(obj)
+	  		vm.currentNode = obj;
 
 	  		// btn & postback
 	  		if(obj.button && obj.payload_type === "postback"){
@@ -67,11 +67,9 @@
 	  // ===============================================
 	  // ADD NODE
 	  vm.addNode = function(node_name,data){
-	  	vm.treeData = add_node(node_name,data);
+	  	add_node(node_name,data);
 	  	vm.menuShow = false;
-	  	debugger
 	  	generateD3(vm.treeData);
-	  	debugger
 	  }
 
 	  // DELETE NODE

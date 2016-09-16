@@ -1,43 +1,36 @@
 <div class="menu">
 	<div ng-show='vm.nodeType === "button_postback"'>
-		<div class="fn" ng-click="vm.addNode(vm.currentNodeName, vm.treeData)">Add Message</div>
-		<div class="fn" ng-click="vm.deleteNode(vm.currentNodeName, vm.treeData)">Delete Button</div>
+		<div class="fn" ng-click="vm.addNode(vm.currentNode.name, vm.treeData)">Add Message</div>
+		<div class="fn" ng-click="vm.deleteNode(vm.currentNode.name, vm.treeData)">Delete Button</div>
 		<div class="fn">Edit Button Title</div>
+			<div>
+				<label>Title :</label>
+				<input type="text" value={{vm.currentNode.text}}>
+				<button>save</button>
+			</div>
 		<div class="fn">Edit JSON</div>
 	</div>
 	<div ng-show='vm.nodeType === "button"'>
-		<div class="fn" ng-click="vm.addNode(vm.currentNodeName, vm.treeData)">Add Message</div>
-		<div class="fn" ng-click="vm.deleteNode(vm.currentNodeName, vm.treeData)">Delete Button</div>
+		<div class="fn" ng-click="vm.addNode(vm.currentNode.name, vm.treeData)">Add Message</div>
+		<div class="fn" ng-click="vm.deleteNode(vm.currentNode.name, vm.treeData)">Delete Button</div>
 		<div class="fn">Edit JSON</div>
 	</div>
 	<div ng-show='vm.nodeType === "message"'>
-		<div class="fn" ng-click="vm.addNode(vm.currentNodeName, vm.treeData)">Add Button</div>
-		<div class="fn" ng-click="vm.deleteNode(vm.currentNodeName, vm.treeData)">Delete Message</div>
+		<div class="fn" ng-click="vm.addNode(vm.currentNode.name, vm.treeData)">Add Button</div>
+		<div class="fn" ng-click="vm.deleteNode(vm.currentNode.name, vm.treeData)">Delete Message</div>
 		<div class="fn">Edit Message Text</div>
+			<div>
+				<label>Title :</label>
+				<input type="text" value={{vm.currentNode.text}}>
+				<button>save</button>
+			</div>
 		<div class="fn">Edit JSON</div>
 	</div>
 	<div ng-show='vm.nodeType === "bubble"'>
-		<div class="fn" ng-click="vm.addNode(vm.currentNodeName, vm.treeData)">Add Button</div>
-		<div class="fn" ng-click="vm.deleteNode(vm.currentNodeName, vm.treeData)">Delete Message</div>
+		<div class="fn" ng-click="vm.addNode(vm.currentNode.name, vm.treeData)">Add Button</div>
+		<div class="fn" ng-click="vm.deleteNode(vm.currentNode.name, vm.treeData)">Delete Message</div>
 		<div class="fn">EDIT JSON</div>
 	</div>
-	<!-- <div class="editing" ng-show="vm.editType">
-		<div ng-show='vm.editType==="json"'>
-			<textarea name="" id="" cols="30" rows="10"></textarea>
-		</div>
-		<div ng-show='vm.editType==="btn_title"'>
-			
-		</div>
-		<div ng-show='vm.editType==="msg_title"'>
-			
-		</div>
-
-
-
-	</div> -->
-
-
-
 </div>
 
 
