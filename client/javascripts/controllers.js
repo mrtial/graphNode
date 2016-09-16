@@ -1,3 +1,5 @@
+var temp=0;
+
 (function(){
 	angular.module("App")
 	.controller("mainController", mainController)
@@ -37,7 +39,7 @@
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__;
 
-	  		vm.currentNodeName = obj.name;
+	  		vm.currentNodeName = obj.id;
 
 	  		// btn & postback
 	  		if(obj.button && obj.payload_type === "postback"){
@@ -67,11 +69,10 @@
 	  // ===============================================
 	  // ADD NODE
 	  vm.addNode = function(node_name,data){
-	  	vm.treeData = add_node(node_name,data);
+	  	add_node(node_name,data);
 	  	vm.menuShow = false;
-	  	debugger
 	  	generateD3(vm.treeData);
-	  	debugger
+
 	  }
 
 	  // DELETE NODE
@@ -96,7 +97,7 @@
 	  var node = data[data.map(function(e) {return e._id}).indexOf(node_name)];
 	  
 	  var tree =    { 
-	    "name" : node._id,
+	    "id" : node._id,
 	    "text" : node.message_text,
 	    "button" : false,
 	    "hidden" : node.type === "hidden",
@@ -106,7 +107,7 @@
 	  node.buttons.forEach(function(b,i){
 	  	console.log(b.type);
 	    tree.children.push({
-	      "name" : node._id + "_button" + i,
+	      "id" : node._id + "_button" + i,
 	      "text" : b.title,
 	      "button" : true,
 	      "hidden" : b.type === "hidden",
@@ -123,7 +124,7 @@
 	  if('children' in treeData)
 	  {
 	    treeData.children.forEach(function(t,i){
-	    if(t.name === node_name){
+	    if(t.id === node_name){
 	        treeData.children.splice(i,1);
 	    }else{
 	      t = delete_node(node_name,t);
@@ -139,20 +140,20 @@
 	  if('children' in treeData)
 	  {
 	    treeData.children.forEach(function(t,i){
-	    if(t.name === node_name){
+	    if(t.id === node_name){
 
 	    	var default_msg = { 
-					"name" : "temp",
+					"id" : "temp"+temp,
 					"text" : "New message",
 					"button" : false,
 					"hidden" : false,
 					"payload_type" : "message",
 					"children" : []
 				 };
-					
+			temp = temp +1;	
 			
 	    	if(t.button === true){
-
+	    		t.children=[default_msg];
 
 	    	}else{
 	    		var max_n = 0;
@@ -160,19 +161,19 @@
 	    		if('children' in t)
 	    		{
 	    			t.children.forEach(function(d){
-							max_n = Math.max(max_n, parseInt(d.name.replace( t.name + "_button" ,"")))
+							max_n = Math.max(max_n, parseInt(d.id.replace( t.id + "_button" ,"")))
 						});
 	    		}else{
 	    			t.children = [];
 	    		}
 
 					t.children.push({
-						"name" : t.name + "_button" + (max_n +1),
+						"id" : t.id + "_button" + (max_n +1),
 						"text" : "button",
 						"button" : true,
 						"hidden" : false,
-						"payload_type" : "post_back",
-						"children" : default_msg
+						"payload_type" : "postback",
+						"children" : [default_msg]
 					});
 
 	    	}	        
@@ -234,9 +235,9 @@
 	      // 	vm.toggleMenu(e);
 
 	        // if(d.button){
-	        //   delete_node(d.name,treeData);
+	        //   delete_node(d.id,treeData);
 	        // }else{
-	        //   delete_node(d.parent.name,treeData)
+	        //   delete_node(d.parent.id,treeData)
 	        // }
 	        // generateD3(treeData);
 	        // });
@@ -253,7 +254,7 @@
 	        if(d===0){
 	          return boxWidth;
 	        }else{
-	          return Math.min( boxWidth,(width - 100)/Math.max.apply(null, numDepth.slice(0,d)));
+	          return Math.min( boxWidth,(width - 20)/Math.max.apply(null, numDepth.slice(0,d)));
 	        }
 	       })
 	      .attr("x",function(d){return -1*d3.select(this).attr("width")/2;})
