@@ -71,10 +71,6 @@
 
 	  // EDIT JSON
 
-
-	  
-
-
 	}
 
 
@@ -95,10 +91,10 @@
 	    "payload_type" : node.payload_type,
 	    "children" : []
 	  };
-
-	  node.buttons.forEach(function(b){
+	  node.buttons.forEach(function(b,i){
+	  	console.log(b.type);
 	    tree.children.push({
-	      "name" : b.payload + "_button",
+	      "name" : node._id + "_button" + i,
 	      "text" : b.title,
 	      "button" : true,
 	      "hidden" : b.type === "hidden",
@@ -108,6 +104,7 @@
 	  });
 	  return tree;
 	}
+
 
 	function delete_node(node_name,treeData){
 	  removeNode()
@@ -123,6 +120,43 @@
 	  }
 	  return treeData;
 	}
+
+	function add_node(node_name,treeData){
+	  removeNode()
+	  if('children' in treeData)
+	  {
+	    treeData.children.forEach(function(t,i){
+	    if(t.name === node_name){
+	    	if(t.button === ture){
+
+
+
+
+
+	    	}else{
+	    		var max_n = 0;
+				treeData.children.forEach(function(d,){
+					x[i] = Math.max(max_n, parseInt(d.replace( treeData.name + "_button" ,"")))
+				});
+
+				treeData.children.push({
+					"name" : treeData.name + "_button" + (max_n +1),
+					"text" : "button",
+					"button" : true,
+					"hidden" : false,
+					"payload_type" : "post_back",
+					"children" : [build("temp", null)]
+				});
+	    	}	        
+	    }else{
+	      t = delete_node(node_name,t);
+	    }
+	  });
+	  }
+	  return treeData;
+	}
+
+
 
 	function generateD3(treeData){
 	  var margin = {top: 40, right: 120, bottom: 20, left: 120},
