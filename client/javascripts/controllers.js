@@ -39,7 +39,8 @@ var temp=0;
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__;
 
-	  		vm.currentNodeName = obj.id;
+	  		console.log(obj)
+	  		vm.currentNode = obj;
 
 	  		// btn & postback
 	  		if(obj.button && obj.payload_type === "postback"){

@@ -36,6 +36,16 @@ html,body{
 	color:white;
 }
 
+#jsonEditor{
+	position: fixed;
+	top:50%;
+	left:50%;
+	transform: translate(-50%,-50%);
+	/*border:1px solid #888888;*/
+	box-shadow: 2px 2px 10px #888888;
+	padding: 10px;
+}
+
 /* D3 GRAPH STYLE */
 /*==================================*/
 #d3_graph{
