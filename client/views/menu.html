@@ -1,7 +1,16 @@
 <div class="menu">
-	<ul>
-		<li>Edit Raw Json</li>
-		<li>Add Node</li>
-		<li>Delete Node</li>
-	</ul>
+	<div ng-show='vm.nodeType === "button"'>
+		<h2>[For Button]</h2>
+		<div>ADD MESSAGE</div>
+		<div>EDIT JSON</div>
+		<div>DELETE NODE</div>
+	</div>
+	<div ng-show='vm.nodeType === "message"'>
+		<h2>[For Message]</h2>
+		<div>ADD BUTTON</div>
+		<div>EDIT JSON</div>
+		<div>DELETE NODE</div>
+	</div>
+
+
 </div>

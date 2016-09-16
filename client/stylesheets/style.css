@@ -21,10 +21,19 @@ html,body{
 
 .menu{
 	position: fixed;
-	top:10%;
-	right:5%;
+	/*background-color: #BED7EC;*/
+	background-color: white;
+	box-shadow: 2px 2px 10px #888888;
+	padding: 20px;
 }
-
+ul,li{
+	padding: 0;
+	list-style: none;
+}
+li:hover{
+	background-color: #438AC9;
+	color:white;
+}
 
 /* D3 GRAPH STYLE */
 /*==================================*/
