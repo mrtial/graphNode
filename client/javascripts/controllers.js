@@ -3,8 +3,9 @@ var temp=0;
 (function(){
 	angular.module("App")
 	.controller("mainController", mainController)
+	.controller("modalController", modalController)
 
-	function mainController($http){
+	function mainController($http, $api){
 		var vm = this;
 		vm.menuShow = false;
 		vm.editType="json";
@@ -12,19 +13,16 @@ var temp=0;
 
     // GET DATA
   	vm.getData = function(id){
-  		$http({
-  		  method: 'GET',
-  		  url: 'http://remissionaire-staging.herokuapp.com/api/v1/nodes/'+id
-  		}).then(function successCallback(response) {
-  		    vm.data = response.data;
-          // RE-STRUCTURE DATA FOR D3
-          vm.treeData = build(vm.nodeID, vm.data);
-          console.log(vm.data);
-          // BUILD D3
-          generateD3(vm.treeData);
-  		  }, function errorCallback(err) {
-  		    console.log(err)
-  		  });
+  		$api.getData(id).then(function successCallback(response) {
+		    vm.data = response.data;
+	      // RE-STRUCTURE DATA FOR D3
+	      vm.treeData = build(vm.nodeID, vm.data);
+	      console.log(vm.data);
+	      // BUILD D3
+	      generateD3(vm.treeData);
+		  }, function errorCallback(err) {
+		    console.log(err)
+		  });
   	}
 
 	  // TOGGLE MENU
@@ -84,6 +82,9 @@ var temp=0;
 	  }
 
 	  // EDIT JSON
+	}
+
+	function modalController(){
 
 	}
 
