@@ -21,16 +21,17 @@ html,body{
 
 .menu{
 	position: fixed;
-	/*background-color: #BED7EC;*/
 	background-color: white;
 	box-shadow: 2px 2px 10px #888888;
-	padding: 20px;
 }
-ul,li{
-	padding: 0;
+.fn{
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
 	list-style: none;
 }
-li:hover{
+
+.fn:hover{
 	background-color: #438AC9;
 	color:white;
 }

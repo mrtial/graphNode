@@ -28,8 +28,14 @@
 	  // TOGGLE MENU
 	  vm.toggleMenu = function(e){
 	  	console.log(obj);
+	  	// show menu at mouse click position
+	  	var menuBox = document.getElementsByClassName('menu')[0];
+	  	menuBox.style.top = e.clientY+"px";
+	  	menuBox.style.left = e.clientX+"px";
+
 
 	  	if(e.target.tagName==="rect"){
+	  		vm.menuShow = true;
 	  		var obj = e.target.__data__;
 	  		if(obj.button){
 	  			vm.nodeType = "button";
@@ -40,11 +46,10 @@
 	  		} 
 	  	} 
 
-	  	// show menu at mouse click position
-	  	var menuBox = document.getElementsByClassName('menu')[0];
-	  	menuBox.style.top = e.clientY+"px";
-	  	menuBox.style.left = e.clientX+"px";
-	  	vm.menuShow = !vm.menuShow;
+	  	else{
+	  		vm.menuShow = false;
+	  	}
+
 	  }
 
 	  // MENU FUNCTION
