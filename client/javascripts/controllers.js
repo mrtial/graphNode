@@ -27,7 +27,7 @@
 
 	  // TOGGLE MENU
 	  vm.toggleMenu = function(e){
-	  	console.log(obj);
+	  	// console.log(obj);
 	  	// show menu at mouse click position
 	  	var menuBox = document.getElementsByClassName('menu')[0];
 	  	menuBox.style.top = e.clientY+"px";
@@ -36,7 +36,9 @@
 	  	if(e.target.tagName==="rect"){
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__;
-	  		console.log(obj);
+
+	  		vm.currentNodeName = obj.name;
+
 	  		// btn & postback
 	  		if(obj.button && obj.payload_type === "postback"){
 	  			vm.nodeType = "button_postback";
@@ -64,10 +66,20 @@
 	  // MENU FUNCTION
 	  // ===============================================
 	  // ADD NODE
-	  // 1. 
+	  vm.addNode = function(node_name,data){
+	  	vm.treeData = add_node(node_name,data);
+	  	vm.menuShow = false;
+	  	debugger
+	  	generateD3(vm.treeData);
+	  	debugger
+	  }
 
 	  // DELETE NODE
-	  // 
+	  vm.deleteNode = function(node_name,data){
+	  	delete_node(node_name, data);
+	  	vm.menuShow = false;
+	  	generateD3(vm.treeData);
+	  }
 
 	  // EDIT JSON
 
@@ -123,33 +135,49 @@
 
 	function add_node(node_name,treeData){
 	  removeNode()
+
 	  if('children' in treeData)
 	  {
 	    treeData.children.forEach(function(t,i){
 	    if(t.name === node_name){
-	    	if(t.button === ture){
 
-
-
+	    	var default_msg = { 
+					"name" : "temp",
+					"text" : "New message",
+					"button" : false,
+					"hidden" : false,
+					"payload_type" : "message",
+					"children" : []
+				 };
+					
+			
+	    	if(t.button === true){
 
 
 	    	}else{
 	    		var max_n = 0;
-				treeData.children.forEach(function(d,){
-					x[i] = Math.max(max_n, parseInt(d.replace( treeData.name + "_button" ,"")))
-				});
 
-				treeData.children.push({
-					"name" : treeData.name + "_button" + (max_n +1),
-					"text" : "button",
-					"button" : true,
-					"hidden" : false,
-					"payload_type" : "post_back",
-					"children" : [build("temp", null)]
-				});
+	    		if('children' in t)
+	    		{
+	    			t.children.forEach(function(d){
+							max_n = Math.max(max_n, parseInt(d.name.replace( t.name + "_button" ,"")))
+						});
+	    		}else{
+	    			t.children = [];
+	    		}
+
+					t.children.push({
+						"name" : t.name + "_button" + (max_n +1),
+						"text" : "button",
+						"button" : true,
+						"hidden" : false,
+						"payload_type" : "post_back",
+						"children" : default_msg
+					});
+
 	    	}	        
 	    }else{
-	      t = delete_node(node_name,t);
+	      t = add_node(node_name,t);
 	    }
 	  });
 	  }
