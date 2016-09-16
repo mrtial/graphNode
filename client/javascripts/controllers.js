@@ -91,7 +91,7 @@
 	      "text" : b.title,
 	      "button" : true,
 	      "hidden" : b.type === "hidden",
-	      "payload_type" : b.payload_type,
+	      "payload_type" : b.type,
 	      "children" : [build(b.next_node_id, data)]
 	    });
 	  });
