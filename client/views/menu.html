@@ -1,12 +1,12 @@
 <div class="menu">
 	<div ng-show='vm.nodeType === "button"'>
-		<!-- <p>[For Button]</p> -->
+		<div class="fn" ng-show='vm.btnType==="postback"'>Edit Title</div>
 		<div class="fn">ADD MESSAGE</div>
 		<div class="fn">EDIT JSON</div>
 		<div class="fn">DELETE NODE</div>
 	</div>
 	<div ng-show='vm.nodeType === "message"'>
-		<!-- <p>[For Message]</p> -->
+		<div class="fn" ng-show='vm.msgType==="message"'>Edit Title</div>
 		<div class="fn">ADD BUTTON</div>
 		<div class="fn">EDIT JSON</div>
 		<div class="fn">DELETE NODE</div>
