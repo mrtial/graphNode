@@ -187,7 +187,6 @@ var temp=0;
 	}
 
 
-
 	function generateD3(treeData){
 	  var margin = {top: 40, right: 120, bottom: 20, left: 120},
 	      width = 1200 - margin.right - margin.left,
@@ -245,17 +244,27 @@ var temp=0;
 
 	    //get width for each depth
 	    var maxDepth = Math.max.apply(Math,d3.selectAll("g.node").data().map(function(o){return o.depth;}));
-	    var numDepth = new Array(maxDepth).fill(0);
-	    numDepth.forEach(function(d,i){
-	      numDepth[i]=d3.selectAll("g.node").data().filter(function(d){return d.depth==(i+1)}).length
-	    });
+	    
+	    var LevelBoxWidth = new Array(maxDepth).fill(0);
+		
+	    LevelBoxWidth.forEach(function(d,i){
+	      var Objs = d3.selectAll("g.node").data().filter(function(d1){return d1.depth==(i+1)});
+	      var Objs_x =[];
+	      Objs.forEach(function(d1){Objs_x.push(d1.x)});
+	      Objs_x.sort(function(a, b){return b-a});
+	      maxGap=boxWidth;
+		      for(j=0;j<(Objs_x.length-1);j++){
+		      	maxGap = Math.min(maxGap,(Objs_x[j]-Objs_x[j+1]-5));
+		      }
+	 	  LevelBoxWidth[i] = maxGap;
+	     });
+
 	    nodeEnter.append("rect")
 	      .attr("width",function(d){
-	        var d = d3.select(this.parentNode).data()[0].depth;
-	        if(d===0){
+	        if(d.depth===0){
 	          return boxWidth;
 	        }else{
-	          return Math.min( boxWidth,(width - 20)/Math.max.apply(null, numDepth.slice(0,d)));
+	          return LevelBoxWidth[d.depth-1];
 	        }
 	       })
 	      .attr("x",function(d){return -1*d3.select(this).attr("width")/2;})
