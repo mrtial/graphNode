@@ -1,25 +1,25 @@
-<div class="menu">
+<div class="menu" ng-controller="ModalCtrl as $ctrl">
 	<div ng-show='vm.nodeType === "button_postback"'>
 		<div class="fn" ng-click="vm.addNode(vm.currentNode.id, vm.treeData)">Add Message</div>
 		<div class="fn" ng-click="vm.deleteNode(vm.currentNode.id, vm.treeData)">Delete Button</div>
 		<div class="fn">Edit Button Title</div>
-		<div class="fn">Edit JSON</div>
+		<div class="fn" ng-click="$ctrl.open('sm')">Edit JSON</div>
 	</div>
 	<div ng-show='vm.nodeType === "button"'>
 		<div class="fn" ng-click="vm.addNode(vm.currentNode.id, vm.treeData)">Add Message</div>
 		<div class="fn" ng-click="vm.deleteNode(vm.currentNode.id, vm.treeData)">Delete Button</div>
-		<div class="fn">Edit JSON</div>
+		<div class="fn" ng-click="$ctrl.open('sm')">Edit JSON</div>
 	</div>
 	<div ng-show='vm.nodeType === "message"'>
 		<div class="fn" ng-click="vm.addNode(vm.currentNode.id, vm.treeData)">Add Button</div>
 		<div class="fn" ng-click="vm.deleteNode(vm.currentNode.id, vm.treeData)">Delete Message</div>
 		<div class="fn">Edit Message Text</div>
-		<div class="fn">Edit JSON</div>
+		<div class="fn" ng-click="$ctrl.open('sm')">Edit JSON</div>
 	</div>
 	<div ng-show='vm.nodeType === "bubble"'>
 		<div class="fn" ng-click="vm.addNode(vm.currentNode.id, vm.treeData)">Add Button</div>
 		<div class="fn" ng-click="vm.deleteNode(vm.currentNode.id, vm.treeData)">Delete Message</div>
-		<div class="fn">EDIT JSON</div>
+		<div class="fn" ng-click="$ctrl.open('sm')">EDIT JSON</div>
 	</div>
 </div>
 

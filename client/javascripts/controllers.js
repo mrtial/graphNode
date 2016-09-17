@@ -3,7 +3,9 @@ var temp=0;
 (function(){
 	angular.module("App")
 	.controller("mainController", mainController)
-	.controller("modalController", modalController)
+	.controller("ModalCtrl", ModalCtrl)
+	.controller("ModalInstanceCtrl", ModalInstanceCtrl)
+
 
 	function mainController($http, $api){
 		var vm = this;
@@ -13,8 +15,9 @@ var temp=0;
 
     // GET DATA
   	vm.getData = function(id){
-  		$api.getData(id).then(function successCallback(response) {
-		    vm.data = response.data;
+  		$api.getData(id)
+  		.then(function successCallback(response) {
+  			vm.data = response.data;
 	      // RE-STRUCTURE DATA FOR D3
 	      vm.treeData = build(vm.nodeID, vm.data);
 	      console.log(vm.data);
@@ -82,11 +85,79 @@ var temp=0;
 	  }
 
 	  // EDIT JSON
+
+	} // mainController
+
+
+	function ModalCtrl($uibModal, $log){
+		var $ctrl = this;
+		  $ctrl.items = ['item1', 'item2', 'item3'];
+
+		  $ctrl.animationsEnabled = true;
+
+		  $ctrl.open = function (size) {
+		    var modalInstance = $uibModal.open({
+		      animation: $ctrl.animationsEnabled,
+		      ariaLabelledBy: 'modal-title',
+		      ariaDescribedBy: 'modal-body',
+		      templateUrl: './views/myModalContent.html',
+		      controller: 'ModalInstanceCtrl',
+		      controllerAs: '$ctrl',
+		      size: size,
+		      resolve: {
+		        items: function () {
+		          return $ctrl.items;
+		        }
+		      }
+		    });
+
+		    modalInstance.result.then(function (selectedItem) {
+		      $ctrl.selected = selectedItem;
+		    }, function () {
+		      $log.info('Modal dismissed at: ' + new Date());
+		    });
+		  };
+
+		  $ctrl.openComponentModal = function () {
+		    var modalInstance = $uibModal.open({
+		      animation: $ctrl.animationsEnabled,
+		      component: 'modalComponent',
+		      resolve: {
+		        items: function () {
+		          return $ctrl.items;
+		        }
+		      }
+		    });
+
+		    modalInstance.result.then(function (selectedItem) {
+		      $ctrl.selected = selectedItem;
+		    }, function () {
+		      $log.info('modal-component dismissed at: ' + new Date());
+		    });
+		  };
+
+		  $ctrl.toggleAnimation = function () {
+		    $ctrl.animationsEnabled = !$ctrl.animationsEnabled;
+		  };
 	}
 
-	function modalController(){
+	function ModalInstanceCtrl($uibModalInstance, items){
+		var $ctrl = this;
+		  $ctrl.items = items;
+		  $ctrl.selected = {
+		    item: $ctrl.items[0]
+		  };
 
+		  $ctrl.ok = function () {
+		    $uibModalInstance.close($ctrl.selected.item);
+		  };
+
+		  $ctrl.cancel = function () {
+		    $uibModalInstance.dismiss('cancel');
+		  };
 	}
+
+
 
 
 	// D3 FUNCTION
