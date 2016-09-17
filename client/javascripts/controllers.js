@@ -57,9 +57,6 @@ var temp=0;
 	  		let data = findNode(obj.id, vm.data);
 	  		vm.json = prettyPrint(JSON.stringify(data));
 
-
-
-
 	  		vm.currentNode = obj;
 
 	  		// btn & postback
