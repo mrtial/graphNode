@@ -40,7 +40,6 @@ var temp=0;
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__;
 
-	  		console.log(obj)
 	  		vm.currentNode = obj;
 
 	  		// btn & postback
@@ -178,7 +177,7 @@ var temp=0;
 	    "children" : []
 	  };
 	  node.buttons.forEach(function(b,i){
-	  	console.log(b.type);
+
 	    tree.children.push({
 	      "id" : node._id + "_button" + i,
 	      "text" : b.title,
@@ -210,12 +209,8 @@ var temp=0;
 	function add_node(node_name,treeData){
 	  removeNode()
 
-	  if('children' in treeData)
-	  {
-	    treeData.children.forEach(function(t,i){
-	    if(t.id === node_name){
-
-	    	var default_msg = { 
+	  if(treeData.id === node_name){
+	  	var default_msg = { 
 					"id" : "temp"+temp,
 					"text" : "New message",
 					"button" : false,
@@ -223,38 +218,40 @@ var temp=0;
 					"payload_type" : "message",
 					"children" : []
 				 };
-			temp = temp +1;	
-			
-	    	if(t.button === true){
-	    		t.children=[default_msg];
+		temp = temp +1;	
+		
+    	if(treeData.button === true){
+    		treeData.children=[default_msg];
+    	}else{
+    		var max_n = 0;
 
-	    	}else{
-	    		var max_n = 0;
-
-	    		if('children' in t)
-	    		{
-	    			t.children.forEach(function(d){
-							max_n = Math.max(max_n, parseInt(d.id.replace( t.id + "_button" ,"")))
-						});
-	    		}else{
-	    			t.children = [];
-	    		}
-
-					t.children.push({
-						"id" : t.id + "_button" + (max_n +1),
-						"text" : "button",
-						"button" : true,
-						"hidden" : false,
-						"payload_type" : "postback",
-						"children" : [default_msg]
+    		if('children' in treeData)
+    		{
+    			treeData.children.forEach(function(d){
+						max_n = Math.max(max_n, parseInt(d.id.replace( treeData.id + "_button" ,"")))
 					});
+    		}else{
+    			treeData.children = [];
+    		}
 
-	    	}	        
-	    }else{
-	      t = add_node(node_name,t);
-	    }
-	  });
+				treeData.children.push({
+					"id" : treeData.id + "_button" + (max_n +1),
+					"text" : "button",
+					"button" : true,
+					"hidden" : false,
+					"payload_type" : "postback",
+					"children" : [default_msg]
+				});
+
+    	}
 	  }
+
+
+	  if('children' in treeData)
+	  {
+	    treeData.children.forEach(function(t,i){
+	      t = add_node(node_name,t);
+	   	});}
 	  return treeData;
 	}
 
