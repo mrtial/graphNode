@@ -3,14 +3,25 @@ var temp=0;
 (function(){
 	angular.module("App")
 	.controller("mainController", mainController)
-	.controller("ModalCtrl", ModalCtrl)
-	.controller("ModalInstanceCtrl", ModalInstanceCtrl)
 
 
-	function mainController($http, $api){
+	function mainController($http, $api, $rootScope){
 		var vm = this;
 		vm.menuShow = false;
 		vm.editType="json";
+
+		vm.modalOpen = function(){
+			vm.open = true;
+		}
+
+		vm.modalClose = function(e){
+			if(e && e.target.id==="modal_window"){
+				vm.open = false;
+				vm.menuShow = false;
+			}
+		}
+
+
 
 
     // GET DATA
@@ -40,7 +51,15 @@ var temp=0;
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__;
 
-	  		console.log(obj)
+	  		// find current node in vm.data
+	  		// bind current node json to $rootScope
+
+	  		let data = findNode(obj.id, vm.data);
+	  		vm.json = prettyPrint(JSON.stringify(data));
+
+
+
+
 	  		vm.currentNode = obj;
 
 	  		// btn & postback
@@ -89,74 +108,17 @@ var temp=0;
 	} // mainController
 
 
-	function ModalCtrl($uibModal, $log){
-		var $ctrl = this;
-		  $ctrl.items = ['item1', 'item2', 'item3'];
-
-		  $ctrl.animationsEnabled = true;
-
-		  $ctrl.open = function (size) {
-		    var modalInstance = $uibModal.open({
-		      animation: $ctrl.animationsEnabled,
-		      ariaLabelledBy: 'modal-title',
-		      ariaDescribedBy: 'modal-body',
-		      templateUrl: './views/myModalContent.html',
-		      controller: 'ModalInstanceCtrl',
-		      controllerAs: '$ctrl',
-		      size: size,
-		      resolve: {
-		        items: function () {
-		          return $ctrl.items;
-		        }
-		      }
-		    });
-
-		    modalInstance.result.then(function (selectedItem) {
-		      $ctrl.selected = selectedItem;
-		    }, function () {
-		      $log.info('Modal dismissed at: ' + new Date());
-		    });
-		  };
-
-		  $ctrl.openComponentModal = function () {
-		    var modalInstance = $uibModal.open({
-		      animation: $ctrl.animationsEnabled,
-		      component: 'modalComponent',
-		      resolve: {
-		        items: function () {
-		          return $ctrl.items;
-		        }
-		      }
-		    });
-
-		    modalInstance.result.then(function (selectedItem) {
-		      $ctrl.selected = selectedItem;
-		    }, function () {
-		      $log.info('modal-component dismissed at: ' + new Date());
-		    });
-		  };
-
-		  $ctrl.toggleAnimation = function () {
-		    $ctrl.animationsEnabled = !$ctrl.animationsEnabled;
-		  };
+	// Helper function
+	// =================================================
+	function prettyPrint(ugly) {
+	    var obj = JSON.parse(ugly);
+	    var pretty = JSON.stringify(obj, undefined, 4);
+	    return pretty
 	}
 
-	function ModalInstanceCtrl($uibModalInstance, items){
-		var $ctrl = this;
-		  $ctrl.items = items;
-		  $ctrl.selected = {
-		    item: $ctrl.items[0]
-		  };
-
-		  $ctrl.ok = function () {
-		    $uibModalInstance.close($ctrl.selected.item);
-		  };
-
-		  $ctrl.cancel = function () {
-		    $uibModalInstance.dismiss('cancel');
-		  };
+	function findNode(id, data){
+		return data[data.map(function(el) {return el._id}).indexOf(id)];
 	}
-
 
 
 
@@ -178,7 +140,7 @@ var temp=0;
 	    "children" : []
 	  };
 	  node.buttons.forEach(function(b,i){
-	  	console.log(b.type);
+
 	    tree.children.push({
 	      "id" : node._id + "_button" + i,
 	      "text" : b.title,
@@ -210,12 +172,8 @@ var temp=0;
 	function add_node(node_name,treeData){
 	  removeNode()
 
-	  if('children' in treeData)
-	  {
-	    treeData.children.forEach(function(t,i){
-	    if(t.id === node_name){
-
-	    	var default_msg = { 
+	  if(treeData.id === node_name){
+	  	var default_msg = { 
 					"id" : "temp"+temp,
 					"text" : "New message",
 					"button" : false,
@@ -223,38 +181,40 @@ var temp=0;
 					"payload_type" : "message",
 					"children" : []
 				 };
-			temp = temp +1;	
-			
-	    	if(t.button === true){
-	    		t.children=[default_msg];
+		temp = temp +1;	
+		
+    	if(treeData.button === true){
+    		treeData.children=[default_msg];
+    	}else{
+    		var max_n = 0;
 
-	    	}else{
-	    		var max_n = 0;
-
-	    		if('children' in t)
-	    		{
-	    			t.children.forEach(function(d){
-							max_n = Math.max(max_n, parseInt(d.id.replace( t.id + "_button" ,"")))
-						});
-	    		}else{
-	    			t.children = [];
-	    		}
-
-					t.children.push({
-						"id" : t.id + "_button" + (max_n +1),
-						"text" : "button",
-						"button" : true,
-						"hidden" : false,
-						"payload_type" : "postback",
-						"children" : [default_msg]
+    		if('children' in treeData)
+    		{
+    			treeData.children.forEach(function(d){
+						max_n = Math.max(max_n, parseInt(d.id.replace( treeData.id + "_button" ,"")))
 					});
+    		}else{
+    			treeData.children = [];
+    		}
 
-	    	}	        
-	    }else{
-	      t = add_node(node_name,t);
-	    }
-	  });
+				treeData.children.push({
+					"id" : treeData.id + "_button" + (max_n +1),
+					"text" : "button",
+					"button" : true,
+					"hidden" : false,
+					"payload_type" : "postback",
+					"children" : [default_msg]
+				});
+
+    	}
 	  }
+
+
+	  if('children' in treeData)
+	  {
+	    treeData.children.forEach(function(t,i){
+	      t = add_node(node_name,t);
+	   	});}
 	  return treeData;
 	}
 
