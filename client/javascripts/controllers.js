@@ -33,10 +33,10 @@
   	}
 
   	vm.modalClose = function(e){
-  		if(e && e.target.id==="modal_window"){
+  		if(e && e.target.id==="modal_window" || e.target.innerHTML ==="cancel"){
   			vm.open = false;
   			vm.menuShow = false;
-  		}
+  		} 
   	}
 
 	  // TOGGLE MENU
