@@ -140,6 +140,9 @@
 	  	  	
 	  	}
 
+	  	// clear text input
+	  	clearInputText();
+
 	  }
 	  // DELETE NODE
 	  // 1. delete id from db
