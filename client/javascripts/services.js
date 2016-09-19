@@ -18,16 +18,16 @@
 
 			// POST /api/v1/node/add-new HTTP/1.1
 			// id=test1 & payloadtype=message
-			this.postData = function(id, data){
+			this.postData = function(data){
 				return $http({
 				  method: 'POST',
-				  url: `http://remissionaire-staging.herokuapp.com/api/v1/node/${id}`,
+				  url: `http://remissionaire-staging.herokuapp.com/api/v1/node/add-new`,
 				  headers: {
 				     'Content-Type':'application/x-www-form-urlencoded',
 				     'Authorization': '6d0f18b6-9606-0f8a-03bc-e24fb551a46f',
 				     'Cache-Control': 'no-cache',
 				  },
-				  data:data
+				  data: data
 				})
 			};
 
@@ -61,6 +61,7 @@
 			// Generate new id
 			// POST /api/v1/node/next-id HTTP/1.1
 			this.getNextID = function(prefix){
+
 				return $http({
 					method: 'POST',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/node/next-id`,

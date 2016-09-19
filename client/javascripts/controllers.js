@@ -108,6 +108,37 @@
 	  // }
 	  vm.addNode = function(){
 	  	vm.menuShow = false;
+
+	  	var default_msg = "payload_type=message&message_text=New Message";
+
+
+
+	  	if(vm.currentNode.button){
+	  	
+	  	}else{
+
+	  		$api.getNextID().then(function(response){
+	  			
+				var button = vm.data.filter(function(d){return(d._id === vm.currentID )})[0].buttons
+				console.log(response.data)
+		  	  	button.push({
+					"type": "postback",
+					"title": "New button",
+					"next_node_id": response.data
+	 	  	  	})
+
+		  		$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
+		  		.then(function(){
+		  			$api.updateData(vm.currentID, "buttons="+JSON.stringify(button)).then(function(){
+		  			vm.getData(vm.nodeID);
+		  			$d3.generateD3(vm.treeData);
+		  			 })
+		  		});
+
+		  		
+	  		})
+	  	  	
+	  	}
 	  }
 	  // DELETE NODE
 	  // 1. delete id from db
