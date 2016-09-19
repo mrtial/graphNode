@@ -181,7 +181,7 @@
 				      for(j=0;j<(Objs_x.length-1);j++){
 				      	maxGap = Math.min(maxGap,(Objs_x[j]-Objs_x[j+1]-5));
 				      }
-			 	  LevelBoxWidth[i] = maxGap;
+			 	  LevelBoxWidth[i] = Math.max(maxGap,10);
 			     });
 
 			    nodeEnter.append("rect")

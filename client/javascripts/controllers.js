@@ -113,8 +113,18 @@
 	  // 3. render d3
 	  vm.deleteNode = function(){
 	  	vm.menuShow = false;
+	  	if(vm.currentNode.button)
+	  	{
+	  		var parent_id = vm.currentNode.parent.id
+		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
+		  						.filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
 
-	  	if( "parent" in vm.currentNode){
+	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+	  			vm.getData(vm.nodeID);
+	  			$d3.generateD3(vm.treeData);
+	  		})
+
+	  	}else if( "parent" in vm.currentNode){
 	  		var parent_id = vm.currentNode.parent.parent.id
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
 		  						.filter(function(d){return(d.next_node_id !== vm.currentID)});
