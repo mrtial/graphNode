@@ -5,7 +5,6 @@
 	function mainController($http, $api, $rootScope, $d3){
 		var vm = this;
 		vm.menuShow = false;
-		vm.editType="json";
 
 		// Toolbar Function
 		// =================================================
@@ -98,19 +97,21 @@
 	  // 1. get id from db
 	  // 2. post new node to db
 	  // 3. render d3
-	  vm.addNode = function(node_name,data){
-	  	add_node(node_name,data);
-	  	vm.menuShow = false;
-	  	$d3.generateD3(vm.treeData);
-	  }
+	  // vm.addNode = function(node_name,data){
+	  // 	add_node(node_name,data);
+	  // 	vm.menuShow = false;
+	  // 	$d3.generateD3(vm.treeData);
+	  // }
 
 	  // DELETE NODE
 	  // 1. delete id from db
 	  // 2. render d3
-	  vm.deleteNode = function(node_name,data){
-	  	delete_node(node_name, data);
+	  vm.deleteNode = function(){
 	  	vm.menuShow = false;
-	  	$d3.generateD3(vm.treeData);
+	  	$api.deleteData(vm.currentID).then(function(){
+	  		vm.getData(vm.nodeID);
+	  		$d3.generateD3(vm.treeData);
+	  	});
 	  }
 
 	  // EDIT JSON / EDIT TITLE / EDIT MSG
@@ -122,17 +123,12 @@
 	  vm.updateDB = function(){
 	  	$api.updateData(vm.currentID, vm.json)
 	  	.then(function success(response){
-	  		debugger
-	  		console.log("success: " +response)
+	  		console.log("success: " +response.data)
+	  		vm.getData(vm.nodeID)
 	  	}, function fail(response){
 	  		console.log("falied: "+response)
 	  	})
-	  	// .then(function(){
-	  	// 	vm.getData(vm.nodeID);
-	  	// }, function(err){console.log(err)}).then(function(){
-	  	// 	vm.modalClose();
-	  	// })
-	  	
+	  	vm.modalClose();
 	  }
 
 
@@ -156,14 +152,14 @@
 	// D3 FUNCTION
 	// =================================================
 	function delete_node(node_name,treeData){
-	  removeNode()
+	  $d3.removeNode()
 	  if('children' in treeData)
 	  {
 	    treeData.children.forEach(function(t,i){
 	    if(t.id === node_name){
 	        treeData.children.splice(i,1);
 	    }else{
-	      t = delete_node(node_name,t);
+	      t = $d3.delete_node(node_name,t);
 	    }
 	  });
 	  }
@@ -171,9 +167,9 @@
 	}
 
 	var temp=0;
-	
+
 	function add_node(node_name,treeData){
-	  removeNode()
+	  $d3.removeNode()
 
 	  if(treeData.id === node_name){
 	  	var default_msg = { 

@@ -36,10 +36,10 @@
 			this.deleteData = function(id){
 				return $http({
 					method: 'DELETE',
-					url: `http://remissionaire-staging.herokuapp.com/api/v1/nodes/${id}`,
+					url: `http://remissionaire-staging.herokuapp.com/api/v1/node/${id}`,
 					headers: {
 					   'Content-Type':'application/x-www-form-urlencoded',
-					   'x-access-token': token,
+					   // 'x-access-token': token,
 					   'Cache-Control': 'no-cache',
 					}
 				})
@@ -49,15 +49,16 @@
 			this.updateData = function(id, data){
 				return $http({
 					method: 'PUT',
-					url: `http://remissionaire-staging.herokuapp.com/api/v1/nodes/${id}`,
+					url: `http://remissionaire-staging.herokuapp.com/api/v1/node/${id}`,
 					headers: {
 					   'Content-Type':'application/x-www-form-urlencoded',
-					   'x-access-token': token,
+					   'Authorization': '78fcbd9e-a088-a25a-593e-7ff0c296bc8b',
 					   'Cache-Control': 'no-cache',
 					},
-					data:JSON.parse(data)
+					data: data
 				})
 			};
+
 
 			// Generate new id
 			// POST /api/v1/node/next-id HTTP/1.1
@@ -87,10 +88,18 @@
 		// D3 FUNCTION
 		// ======================================================
 		function d3graph(){
+			// Helper Function
+			this.removeNode = function(){
+			  var node = document.getElementById('d3_graph');
+			  while (node && node.firstChild) {
+			      node.removeChild(node.firstChild);
+			  }
+			}
+
 			this.build = function(node_name, data){
 			  var self = this;
 			  // Remove previous svg if exist
-			  removeNode()
+			  this.removeNode()
 
 			  var node = data[data.map(function(e) {return e._id}).indexOf(node_name)];
 			  
@@ -259,14 +268,6 @@
 			  } // update
 			}
 
-		}
-
-		// Helper Function
-		function removeNode(){
-		  var node = document.getElementById('d3_graph');
-		  while (node && node.firstChild) {
-		      node.removeChild(node.firstChild);
-		  }
 		}
 
 })()
