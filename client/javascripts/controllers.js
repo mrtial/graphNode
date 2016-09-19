@@ -110,10 +110,26 @@
 	  // 3. render d3
 	  vm.deleteNode = function(){
 	  	vm.menuShow = false;
-	  	$api.deleteData(vm.currentID).then(function(){
-	  		vm.getData(vm.nodeID);
-	  		$d3.generateD3(vm.treeData);
-	  	});
+
+	  	if( "parent" in vm.currentNode){
+	  		var parent_id = vm.currentNode.parent.parent.id
+		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
+		  						.filter(function(d){return(d.next_node_id !== vm.currentID)});
+
+		  	$api.deleteData(vm.currentID).then(function(){
+		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+		  			vm.getData(vm.nodeID);
+		  			$d3.generateD3(vm.treeData);
+		  		})
+		  	});
+	  	}else{
+	  		
+		  	$api.deleteData(vm.currentID).then(function(){
+		  			vm.getData(vm.nodeID);
+		  			$d3.removeNode();
+		  	});
+
+	  	}
 	  }
 
 	  // EDIT JSON / EDIT TITLE / EDIT MSG
