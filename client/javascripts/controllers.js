@@ -108,6 +108,7 @@
 	  // }
 	  vm.addNode = function(){
 	  	vm.menuShow = false;
+
 	  }
 	  // DELETE NODE
 	  // 1. delete id from db
@@ -163,6 +164,7 @@
 	  }
 
 	  vm.updateText = function(text){
+
 	  	vm.menuShow = false;
 	  	vm.open = false;	
 	  	if(vm.currentNode.button){
@@ -181,6 +183,10 @@
 	  			$d3.generateD3(vm.treeData);
 	  		})
 	  	}
+
+	  	// clear text input
+	  	document.getElementsByClassName("new_text")[0].value ="";
+	  	document.getElementsByClassName("new_text")[1].value ="";
 	  }
 
 	} // mainController
