@@ -160,6 +160,21 @@
 	  	vm.modalClose();
 	  }
 
+	  vm.updateText = function(text){
+	  	if(currentNode.button){
+	  		var parent_id = vm.currentNode.parent.id
+		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
+			debugger
+			parent_button.filter(function(d){return(d.next_node_id === vm.currentNode.children[0].id)})[0].title = text;
+
+	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+	  			vm.getData(vm.nodeID);
+	  			$d3.generateD3(vm.treeData);
+	  		})
+	  	}else{
+
+	  	}
+	  }
 
 	} // mainController
 
