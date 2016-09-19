@@ -5,7 +5,7 @@
 	<div class="edit_json" ng-show="vm.editType==='json'">
 		<textarea id="jsonText" class="" rows="15" cols="80" ng-model="vm.json">{{vm.json}}</textarea>
 		<div>
-			<button class="btn btn-default">cancel</button>
+			<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
 			<button class="btn btn-primary" ng-click="vm.updateDB()">save</button>
 		</div>
 	</div>
@@ -13,15 +13,15 @@
 	<div class="edit_button_title" ng-show="vm.editType==='btn_title'">
 		<label>Button Title</label>
 		<input type="text" name="button_title" style="{width: 300px}">
-		<button class="btn btn-default">cancel</button>
-		<button class="btn btn-primary">update</button>
+		<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
+		<button class="btn btn-primary" ng-click="vm.updateDB()">update</button>
 	</div>
 
 	<div class="edit_msg_title" ng-show="vm.editType==='msg_text'">
 		<label>Message Text</label>
 		<input type="text" name="message_title" style="{width: 300px}">
-		<button class="btn btn-default">cancel</button>
-		<button class="btn btn-primary">update</button>
+		<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
+		<button class="btn btn-primary" ng-click="vm.updateDB()">update</button>
 	</div>
 
 </div>
