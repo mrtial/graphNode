@@ -25,8 +25,11 @@
 
   	// Modal Function : Open / Close
   	// =================================================
-  	vm.modalOpen = function(){
+  	vm.modalOpen = function(e){
   		vm.open = true;
+  		if(e.target.innerHTML==="Edit JSON"){vm.editType="json"}
+  		else if(e.target.innerHTML==="Edit Button Title"){vm.editType="btn_title"}
+  		else if(e.target.innerHTML==="Edit Message Text"){vm.editType="msg_text"}
   	}
 
   	vm.modalClose = function(e){
@@ -45,9 +48,9 @@
 	  	menuBox.style.top = e.clientY+"px";
 	  	menuBox.style.left = e.clientX+"px";
 
-	  	if(e.target.tagName==="rect"){
+	  	if(e.target.tagName==="rect" || e.target.parentElement.previousSibling.tagName ==="rect"){
 	  		vm.menuShow = true;
-	  		var obj = e.target.__data__;
+	  		var obj = e.target.__data__ || e.target.parentElement.previousSibling.__data__ ;
 	  		console.log(obj)
 
 	  		// find current node in vm.data

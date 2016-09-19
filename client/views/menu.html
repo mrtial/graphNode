@@ -3,30 +3,30 @@
 	<div ng-show='vm.nodeType === "button_postback"'>
 		<div class="fn" ng-click="vm.addNode()">Add Message</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Button</div>
-		<div class="fn" ng-click="vm.modalOpen()">Edit Button Title</div>
-		<div class="fn" ng-click="vm.modalOpen()">Edit JSON</div>
+		<div class="fn" ng-click="vm.modalOpen($event)">Edit Button Title</div>
+		<div class="fn" ng-click="vm.modalOpen($event)">Edit JSON</div>
 	</div>
 
 
 	<div ng-show='vm.nodeType === "button"'>
 		<div class="fn" ng-click="vm.addNode()">Add Message</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Button</div>
-		<div class="fn" ng-click="vm.modalOpen()">Edit JSON</div>
+		<div class="fn" ng-click="vm.modalOpen($event)">Edit JSON</div>
 	</div>
 
 
 	<div ng-show='vm.nodeType === "message"'>
 		<div class="fn" ng-click="vm.addNode()">Add Button</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Message</div>
-		<div class="fn" ng-click="vm.modalOpen()">Edit Message Text</div>
-		<div class="fn" ng-click="vm.modalOpen()">Edit JSON</div>
+		<div class="fn" ng-click="vm.modalOpen($event)">Edit Message Text</div>
+		<div class="fn" ng-click="vm.modalOpen($event)">Edit JSON</div>
 	</div>
 
 
 	<div ng-show='vm.nodeType === "bubble"'>
 		<div class="fn" ng-click="vm.addNode()">Add Button</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Message</div>
-		<div class="fn" ng-click="vm.modalOpen()">EDIT JSON</div>
+		<div class="fn" ng-click="vm.modalOpen($event)">EDIT JSON</div>
 	</div>
 </div>
 
