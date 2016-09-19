@@ -7,7 +7,6 @@
 		// API FUNCTION 
 		// ======================================================
 		function api($http){
-			var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibWlzaGEiLCJpYXQiOjE0Njc3ODc1MjUsImV4cCI6MTQ2Nzg3MzkyNX0.Hljv7vcSWX9G2N11-XJTuZvnZP4PiGZMJJYm2tIGwD0";
 
 			// GET DATA
 			this.getData = function(id){
@@ -25,7 +24,7 @@
 				  url: `http://remissionaire-staging.herokuapp.com/api/v1/node/${id}`,
 				  headers: {
 				     'Content-Type':'application/x-www-form-urlencoded',
-				     'x-access-token': token,
+				     'Authorization': '6d0f18b6-9606-0f8a-03bc-e24fb551a46f',
 				     'Cache-Control': 'no-cache',
 				  },
 				  data:data
@@ -39,7 +38,6 @@
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/node/${id}`,
 					headers: {
 					   'Content-Type':'application/x-www-form-urlencoded',
-					   // 'x-access-token': token,
 					   'Cache-Control': 'no-cache',
 					}
 				})
@@ -52,10 +50,10 @@
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/node/${id}`,
 					headers: {
 					   'Content-Type':'application/x-www-form-urlencoded',
-					   'Authorization': '78fcbd9e-a088-a25a-593e-7ff0c296bc8b',
+					   'Authorization': '317545ec-3e7c-1e19-5a0e-faa45e261480',
 					   'Cache-Control': 'no-cache',
 					},
-					data: data
+					data:data
 				})
 			};
 
@@ -71,7 +69,7 @@
 					   'Postman-Token': '435667e9-55f8-6613-c513-8227cbed063a',
 					   'Cache-Control': 'no-cache',
 					},
-					data:{prefix}
+					data:prefix
 				})
 			};
 
