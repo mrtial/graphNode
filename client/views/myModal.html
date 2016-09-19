@@ -12,16 +12,16 @@
 
 	<div class="edit_button_title" ng-show="vm.editType==='btn_title'">
 		<label>Button Title</label>
-		<input type="text" name="button_title" style="{width: 300px}">
+		<input type="text" name="button_title" style="{width: 300px}" ng-model="vm.text">
 		<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
-		<button class="btn btn-primary" ng-click="vm.updateDB()">update</button>
+		<button class="btn btn-primary" ng-click="vm.updateText(vm.text)">update</button>
 	</div>
 
 	<div class="edit_msg_title" ng-show="vm.editType==='msg_text'">
 		<label>Message Text</label>
-		<input type="text" name="message_title" style="{width: 300px}">
+		<input type="text" name="message_title" style="{width: 300px}" ng-model="vm.text">
 		<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
-		<button class="btn btn-primary" ng-click="vm.updateDB()">update</button>
+		<button class="btn btn-primary" ng-click="vm.updateText(vm.text)">update</button>
 	</div>
 
 </div>
