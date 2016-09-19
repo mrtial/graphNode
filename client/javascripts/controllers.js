@@ -185,8 +185,14 @@
 	  	}
 
 	  	// clear text input
-	  	document.getElementsByClassName("new_text")[0].value ="";
-	  	document.getElementsByClassName("new_text")[1].value ="";
+	  	clearInputText();
+	  }
+
+	  function clearInputText(){
+	  	var inputText = document.getElementsByClassName("new_text");
+	  	for(var i=0;i<inputText.length;i++){
+	  		inputText[i].value="";
+	  	}
 	  }
 
 	} // mainController
