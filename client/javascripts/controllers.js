@@ -139,6 +139,7 @@
 	  		})
 	  	  	
 	  	}
+
 	  }
 	  // DELETE NODE
 	  // 1. delete id from db
@@ -194,6 +195,7 @@
 	  }
 
 	  vm.updateText = function(text){
+
 	  	vm.menuShow = false;
 	  	vm.open = false;	
 	  	if(vm.currentNode.button){
@@ -211,6 +213,16 @@
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
 	  		})
+	  	}
+
+	  	// clear text input
+	  	clearInputText();
+	  }
+
+	  function clearInputText(){
+	  	var inputText = document.getElementsByClassName("new_text");
+	  	for(var i=0;i<inputText.length;i++){
+	  		inputText[i].value="";
 	  	}
 	  }
 
