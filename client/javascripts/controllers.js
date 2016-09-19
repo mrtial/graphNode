@@ -96,7 +96,8 @@
 	  // ADD NODE
 	  // 1. get id from db
 	  // 2. post new node to db
-	  // 3. render d3
+	  // 3. get all updated data from db
+	  // 4. render d3
 	  // vm.addNode = function(node_name,data){
 	  // 	add_node(node_name,data);
 	  // 	vm.menuShow = false;
@@ -105,7 +106,8 @@
 
 	  // DELETE NODE
 	  // 1. delete id from db
-	  // 2. render d3
+	  // 2. get all updated data from db
+	  // 3. render d3
 	  vm.deleteNode = function(){
 	  	vm.menuShow = false;
 	  	$api.deleteData(vm.currentID).then(function(){
@@ -116,10 +118,8 @@
 
 	  // EDIT JSON / EDIT TITLE / EDIT MSG
 	  // 1. put data to db
-	  // 2. render d3
-
-
-	  // updateDB
+	  // 2. get all updated data from db
+	  // 3. render d3
 	  vm.updateDB = function(){
 	  	$api.updateData(vm.currentID, vm.json)
 	  	.then(function success(response){
