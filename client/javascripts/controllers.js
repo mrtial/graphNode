@@ -18,6 +18,7 @@
 	      console.log(vm.data);
 	      // BUILD D3
 	      $d3.generateD3(vm.treeData);
+
 		  }, function errorCallback(err) {
 		    console.log(err)
 		  });
@@ -106,15 +107,21 @@
 	  // 	vm.menuShow = false;
 	  // 	$d3.generateD3(vm.treeData);
 	  // }
-	  vm.addNode = function(){
+	  vm.addNode = function(text){
 	  	vm.menuShow = false;
-
-	  	var default_msg = "payload_type=message&message_text=New Message";
-
-
-
 	  	if(vm.currentNode.button){
-	  	
+	  		$api.getNextID().then(function(response){
+	  			$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
+		  		.then(function(){
+		  			var button = vm.data.filter(function(d){return(d._id === vm.currentNode.parent.id )})[0].buttons
+		  			var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
+		  			button[index].next_node_id = response.data
+		  			$api.updateData(vm.currentID, "buttons="+JSON.stringify(button))
+		  			.then(function(){vm.getData(vm.nodeID);$d3.generateD3(vm.treeData);})
+		  		});
+	  		});
+
+	  		
 	  	}else{
 
 	  		$api.getNextID().then(function(response){
@@ -162,10 +169,9 @@
 	  		})
 
 	  	}else if( "parent" in vm.currentNode){
-	  		var parent_id = vm.currentNode.parent.parent.id
-		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
-		  						.filter(function(d){return(d.next_node_id !== vm.currentID)});
-
+	  		var parent_id = vm.currentNode.parent.parent.id;
+		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons;
+		  	parent_button.filter(function(d){return(d.next_node_id === vm.currentID)})[0].next_node_id = "";
 		  	$api.deleteData(vm.currentID).then(function(){
 		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 		  			vm.getData(vm.nodeID);
@@ -244,7 +250,16 @@
 		return data[data.map(function(el) {return el._id}).indexOf(id)];
 	}
 
+	function JSONtoString(s){
+		var obj = JSON.parse(s);
+		var key = Object.keys(obj);
+		var apiData = "";
+		key.forEach(function(d){
+			apiData = apiData + d + "=" + JSON.stringify(obj[d]) +"&"
+		});
 
+		return apiData;
+	}
 
 	// D3 FUNCTION
 	// =================================================
@@ -309,7 +324,7 @@
 	  if('children' in treeData)
 	  {
 	    treeData.children.forEach(function(t,i){
-	      t = add_node(node_name,t);
+	      t = addNode_node(node_name,t);
 	   	});}
 	  return treeData;
 	}
