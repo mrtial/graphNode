@@ -100,6 +100,7 @@
 			  // Remove previous svg if exist
 			  this.removeNode()
 
+
 			  var node = data[data.map(function(e) {return e._id}).indexOf(node_name)];
 			  
 			  var tree =    { 
@@ -113,14 +114,16 @@
 
 			  node.buttons.forEach(function(b,i){
 
-			    tree.children.push({
+			  	tree.children.push({
 			      "id" : node._id + "_button" + i,
 			      "text" : b.title,
 			      "button" : true,
 			      "hidden" : b.type === "hidden",
 			      "payload_type" : b.type,
-			      "children" : [self.build(b.next_node_id, data)]
-			    });
+			      "children" : b.next_node_id===""?[]:[self.build(b.next_node_id, data)]
+			    });	
+
+			    
 			  });
 			  return tree;
 			}
