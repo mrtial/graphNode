@@ -52,11 +52,11 @@ html,body{
 }
 
 .modalBox{
-	position: absolute;
+	position: fixed;
 	padding: 20px;
 	top:50%;
 	left:50%;
-	transform: translate(-50%,-70%);
+	transform: translate(-50%,-50%);
 	z-index: 5;
 	background-color: white;
 	border-radius: 5px;
