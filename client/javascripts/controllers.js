@@ -151,6 +151,12 @@
 	  	clearInputText();
 
 	  }
+
+
+	  vm.linkNode = function(){
+	  	vm.menuShow = false;
+	  }
+
 	  // DELETE NODE
 	  // 1. delete id from db
 	  // 2. get all updated data from db
@@ -232,6 +238,7 @@
 	  	vm.menuShow = false;
 	  	vm.open = false;
 		var currentID = vm.currentNode.button?vm.currentNode.parent.id:vm.currentNode.id;
+		console.log(currentID);
 	  	$api.updateData(currentID, JSONtoString(vm.json)).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
