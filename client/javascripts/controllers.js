@@ -188,19 +188,55 @@
 	  	}
 	  }
 
+
+	  vm.deleteAllNode = function(){
+	  	vm.menuShow = false;
+	  	if(vm.currentNode.button)
+	  	{
+	  		var parent_id = vm.currentNode.parent.id
+		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
+		  						.filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
+
+		  	$api.deleteAllData(vm.currentNode.children.id).then(function(){
+		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+	  				vm.getData(vm.nodeID);
+	  				$d3.generateD3(vm.treeData);
+	  			})
+		  	})
+	  		
+
+	  	}else if( "parent" in vm.currentNode){
+	  		var parent_id = vm.currentNode.parent.parent.id;
+		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons;
+		  	parent_button.filter(function(d){return(d.next_node_id === vm.currentID)})[0].next_node_id = "";
+		  	$api.deleteAllData(vm.currentID).then(function(){
+		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+		  			vm.getData(vm.nodeID);
+		  			$d3.generateD3(vm.treeData);
+		  		})
+		  	});
+	  	}else{
+	  		
+		  	$api.deleteAllData(vm.currentID).then(function(){
+		  			vm.getData(vm.nodeID);
+		  			$d3.removeNode();
+		  	});
+
+	  	}
+	  }
 	  // EDIT JSON / EDIT TITLE / EDIT MSG
 	  // 1. put data to db
 	  // 2. get all updated data from db
 	  // 3. render d3
 	  vm.updateDB = function(){
-	  	$api.updateData(vm.currentID, vm.json)
-	  	.then(function success(response){
-	  		console.log("success: " +response.data)
-	  		vm.getData(vm.nodeID)
-	  	}, function fail(response){
-	  		console.log("falied: "+response)
-	  	})
-	  	vm.modalClose();
+	  	vm.menuShow = false;
+	  	vm.open = false;
+		var currentID = vm.currentNode.button?vm.currentNode.parent.id:vm.currentNode.id;
+	  	$api.updateData(currentID, JSONtoString(vm.json)).then(function(){
+	  			vm.getData(vm.nodeID);
+	  			$d3.generateD3(vm.treeData);
+
+	  		})
 	  }
 
 	  vm.updateText = function(text){
@@ -255,10 +291,13 @@
 		var key = Object.keys(obj);
 		var apiData = "";
 		key.forEach(function(d){
-			apiData = apiData + d + "=" + JSON.stringify(obj[d]) +"&"
+			if(d !== "_id"){
+				apiData = apiData + d + "=" + JSON.stringify(obj[d]).replace(/\"/g, "") +"&"
+			}
+			
 		});
-
-		return apiData;
+		console.log(apiData)
+		return apiData.replace(/\"/g, "");
 	}
 
 	// D3 FUNCTION
