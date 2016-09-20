@@ -1,11 +1,34 @@
 <div class="tool">
+
 	<form class="form-inline">
-		<div class="form-group">
-	    <label>Starting Node</label>
-			<input class="form-control" type="text" ng-model="vm.nodeID"/>
-		</div>
-		<button class="btn btn-info" ng-click="vm.getData(vm.nodeID)">Submit</button>
+		<h5>Rrefix</h5>
+		<input type="text" class="form-control">
+		<button class="btn btn-info btn-sm">New Message</button>
 	</form>
+
+  <form class="form-inline">
+  	<h5>Root Node ID</h5>
+  	<input  type="text" class="form-control" ng-model="vm.nodeID"/>
+  	<button class="btn btn-info btn-sm" ng-click="vm.getData(vm.nodeID)">Show Tree</button>
+  </form>
+
+  <form class="form-inline">
+		<h5>Filter</h5>
+  	<input type="text" class="form-control">
+  	<button class="btn btn-info btn-sm">Show Message</button>
+  </form>
+
+  <form class="form-inline">
+  	<input type="checkbox"> <span>Root Message Only</span>
+  </form>
+
+	<div class="box">
+		<ul>
+			<li>1</li>
+			<li>2</li>
+		</ul>
+	</div>
+
 </div>
 
 
