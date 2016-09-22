@@ -152,7 +152,7 @@
 	  		
 	  	}else{
 
-	  		$api.getNextID().then(function(response){
+	  		$api.getNextID(text).then(function(response){
 	  			
 				var button = vm.data.filter(function(d){return(d._id === vm.currentID )})[0].buttons
 				console.log(response.data)
