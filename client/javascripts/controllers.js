@@ -134,6 +134,7 @@
 	  	if(vm.currentNode.button){
 
 	  		$api.getNextID(text).then(function(response){
+				console.log(response.data)
 
 	  			$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
 		  		.then(function(){
