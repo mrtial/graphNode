@@ -58,6 +58,15 @@ input.form-control{
 	color:black;
 	overflow: scroll;
 }
+
+.error_msg{
+	margin-top:20px;
+	margin-bottom:20px;
+	color:#FF6347;
+}
+
+
+
 /* modal */
 /* ================================*/
 

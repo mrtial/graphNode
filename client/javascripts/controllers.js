@@ -5,6 +5,7 @@
 	function mainController($http, $api, $rootScope, $d3){
 		var vm = this;
 		vm.menuShow = false;
+		// vm.errorMsg = "this is where error message shows."
 
 		// Toolbar Function
 		// =================================================
