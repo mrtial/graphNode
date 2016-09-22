@@ -15,7 +15,9 @@
   <form class="form-inline">
 		<h5>Filter</h5>
   	<input type="text" class="form-control">
-  	<button class="btn btn-info btn-sm" ng-click="vm.getAllNode()">Show Message</button>
+  	<button class="btn btn-info btn-sm" ng-click="vm.getAllNode()" ng-show="!vm.rootOnly">Show Message</button>
+    <button class="btn btn-info btn-sm" ng-click="vm.getRootNode()" ng-show="vm.rootOnly">Show Message</button>
+
   </form>
 
   <form class="form-inline">
@@ -23,7 +25,9 @@
   </form>
 
 	<div class="box">
-	
+   <ul>
+    <li ng-repeat="node in vm.showAllNode">{{node._id}}</li>
+   </ul>
 	</div>
 
   <div class="error_msg" ng-show="vm.errorMsg">

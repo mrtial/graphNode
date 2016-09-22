@@ -5,7 +5,7 @@
 	function mainController($http, $api, $rootScope, $d3){
 		var vm = this;
 		vm.menuShow = false;
-		// vm.errorMsg = "this is where error message shows."
+		vm.errorMsg = "";
 
 		// Toolbar Function
 		// =================================================
@@ -16,13 +16,30 @@
   			vm.data = response.data;
 	      // RE-STRUCTURE DATA FOR D3
 	      vm.treeData = $d3.build(vm.nodeID, vm.data);
-	      console.log(vm.data);
 	      // BUILD D3
 	      $d3.generateD3(vm.treeData);
 
-		  }, function errorCallback(err) {
-		    console.log(err)
+		  }, function errorCallback(error) {
+		  	vm.errorMsg=error}
 		  });
+  	}
+
+  	vm.getAllNode = function(){
+  		$api.getAllNode()
+  		.then(function success(response){
+  			vm.showAllNode = response.data;
+  		}, function error(response){
+  			vm.errorMsg = response;
+  		})
+  	};
+
+  	vm.getRootNode = function(){
+  		$api.getRootNode()
+  		.then(function success(response){
+  			vm.showAllNode = response.data;
+  		}, function error(response){
+  			vm.errorMsg = response;
+  		})
   	}
 
   	// Modal Function : Open / Close
@@ -48,13 +65,14 @@
 	  	// console.log(obj);
 	  	// show menu at mouse click position
 	  	var menuBox = document.getElementsByClassName('menu')[0];
+
 	  	menuBox.style.top = e.clientY+"px";
 	  	menuBox.style.left = e.clientX+"px";
 
 	  	if(e.target.tagName==="rect" || e.target.parentElement.previousSibling.tagName ==="rect"){
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__ || e.target.parentElement.previousSibling.__data__ ;
-	  		console.log(obj)
+	  		// console.log(obj)
 
 	  		// find current node in vm.data
 	  		// bind current node json to $rootScope
@@ -133,11 +151,10 @@
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button){
 
-	  		$api.getNextID(text).then(function(response){
-				console.log(response.data)
-
+	  		$api.getNextID(text)
+	  		.then(function success (response){
 	  			$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
-		  		.then(function(){
+		  		.then(function success(){
 		  			var button = vm.data.filter(function(d){return(d._id === vm.currentNode.parent.id )})[0].buttons
 		  			var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
 		  			button[index].next_node_id = response.data
@@ -147,16 +164,18 @@
 		  			
 		  				$d3.generateD3(vm.treeData);
 		  			})
-		  		});
+		  		},function error(error){vm.errorMsg = error;});
+	  		}, function error(error){
+	  				vm.errorMsg = error;
 	  		});
 
 	  		
 	  	}else{
 
-	  		$api.getNextID(text).then(function(response){
+	  		$api.getNextID(text).then(function success(response){
 	  			
 				var button = vm.data.filter(function(d){return(d._id === vm.currentID )})[0].buttons
-				console.log(response.data)
+
 		  	  	button.push({
 					"type": "postback",
 					"title": "New button",
@@ -164,16 +183,13 @@
 	 	  	  	})
 
 		  		$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
-		  		.then(function(){
+		  		.then(function success(){
 		  			$api.updateData(vm.currentID, "buttons="+JSON.stringify(button)).then(function(){
 		  			vm.getData(vm.nodeID);
-		  			
 		  			$d3.generateD3(vm.treeData);
 		  			 })
-		  		});
-
-		  		
-	  		})
+		  		}, function error(error){vm.errorMsg=error});
+	  		}, function error(error){vm.errorMsg=error})
 	  	  	
 	  	}
 
@@ -184,14 +200,14 @@
 
 	  vm.addNewNode =function(text){
 
-	  	$api.getNextID(text).then(function(response){
+	  	$api.getNextID(text).then(function success(response){
 	  			$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
-		  			.then(function(){
+		  			.then(function success(){
 		  				vm.getData(vm.nodeID);
 		  			
 		  				$d3.generateD3(vm.treeData);
-		  			});
-		  		});
+		  			}, function error(error){vm.errorMsg=error});
+		  		}, function error(error){vm.errorMsg=error});
 	  }
 
 	  vm.linkNode = function(text){
@@ -201,10 +217,10 @@
 		  	var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
 		  	parrent_button[index].next_node_id = text;
 
-		  	$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+		  	$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
-	  		})
+	  		}, function error(error){vm.errorMsg=error})
 
 	  	}
 	  }
@@ -222,29 +238,29 @@
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
 		  						.filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
 
-	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 	  			vm.getData(vm.nodeID);
 	  			
 	  			$d3.generateD3(vm.treeData);
-	  		})
+	  		},function error(error){vm.errorMsg=error})
 
 	  	}else if( "parent" in vm.currentNode){
 	  		var parent_id = vm.currentNode.parent.parent.id;
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons;
 		  	parent_button.filter(function(d){return(d.next_node_id === vm.currentID)})[0].next_node_id = "";
-		  	$api.deleteData(vm.currentID).then(function(){
-		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+		  	$api.deleteData(vm.currentID).then(function success(){
+		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 		  			vm.getData(vm.nodeID);
 		  			
 		  			$d3.generateD3(vm.treeData);
-		  		})
-		  	});
+		  		}, function error(error){vm.errorMsg=error})
+		  	}, function error(error){vm.errorMsg=error});
 	  	}else{
 	  		
-		  	$api.deleteData(vm.currentID).then(function(){
+		  	$api.deleteData(vm.currentID).then(function success(){
 		  			vm.getData(vm.nodeID);
 		  			$d3.removeNode();
-		  	});
+		  	},function error(error){vm.errorMsg=error});
 
 	  	}
 	  }
@@ -254,17 +270,16 @@
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button)
 	  	{
-	  		debugger	
 	  		var parent_id = vm.currentNode.parent.id
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
 		  						.filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
 
-		  	$api.deleteAllData(vm.currentNode.children[0].id).then(function(){
-		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
+		  	$api.deleteAllData(vm.currentNode.children[0].id).then(function success(){
+		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 	  				vm.getData(vm.nodeID);
 	  				$d3.generateD3(vm.treeData);
-	  			})
-		  	})
+	  			},function error(error){vm.errorMsg=error})
+		  	}, function error(error){vm.errorMsg=error})
 	  		
 
 	  	}else if( "parent" in vm.currentNode){
@@ -275,14 +290,14 @@
 		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 		  			vm.getData(vm.nodeID);
 		  			$d3.generateD3(vm.treeData);
-		  		})
-		  	});
+		  		}, function error(error){vm.errorMsg=error})
+		  	},function error(error){vm.errorMsg=error});
 	  	}else{
 	  		
 		  	$api.deleteAllData(vm.currentID).then(function(){
 		  			vm.getData(vm.nodeID);
 		  			$d3.removeNode();
-		  	});
+		  	}, function error(error){vm.errorMsg=error});
 
 	  	}
 	  }
@@ -294,13 +309,13 @@
 	  	vm.menuShow = false;
 	  	vm.open = false;
 		var currentID = vm.currentNode.button?vm.currentNode.parent.id:vm.currentNode.id;
-		console.log(JSONtoString(vm.json));
+		// console.log(JSONtoString(vm.json));
 
 	  	$api.updateData(currentID, JSONtoString(vm.json)).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
 
-	  		})
+	  		}, function error(error){vm.errorMsg=error})
 	  }
 
 	  vm.updateText = function(text){
@@ -316,12 +331,12 @@
 	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
-	  		})
+	  		}, function error(error){vm.errorMsg=error})
 	  	}else{
 	  		$api.updateData(vm.currentID, "message_text="+ text).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
-	  		})
+	  		}, function error(error){vm.errorMsg=error})
 	  	}
 
 	  	// clear text input
