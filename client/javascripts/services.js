@@ -214,11 +214,14 @@
 			      var Objs = d3.selectAll("g.node").data().filter(function(d1){return d1.depth==(i+1)});
 			      var Objs_x =[];
 			      Objs.forEach(function(d1){Objs_x.push(d1.x)});
+			      Objs_x.push(width + margin.right + margin.left); 
+
 			      Objs_x.sort(function(a, b){return b-a});
 			      maxGap=boxWidth;
 				      for(j=0;j<(Objs_x.length-1);j++){
 				      	maxGap = Math.min(maxGap,(Objs_x[j]-Objs_x[j+1]-5));
 				      }
+
 			 	  LayerBoxWidth[i] = Math.max(maxGap,10);
 			     });
 
