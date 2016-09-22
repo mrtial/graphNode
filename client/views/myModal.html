@@ -11,17 +11,26 @@
 	</div>
 
 	<div class="edit_button_title" ng-show="vm.editType==='btn_title'">
-		<label>Button Title</label>
-		<input class="new_text" type="text" name="button_title" style="{width: 300px}" ng-model="vm.text">
-		<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
-		<button class="btn btn-primary" ng-click="vm.updateText(vm.text)">update</button>
+		<div>Button Title</div>
+		<textarea class="new_text" name="button_title" rows="10" cols="50" ng-model="vm.text"></textarea>
+		<div>
+			<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
+			<button class="btn btn-primary" ng-click="vm.updateText(vm.text)">update</button>
+		</div>
 	</div>
 
 	<div class="edit_msg_title" ng-show="vm.editType==='msg_text'">
-		<label>Message Text</label>
-		<input class="new_text" type="text" name="message_title" style="{width: 300px}" ng-model="vm.text">
-		<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
-		<button class="btn btn-primary" ng-click="vm.updateText(vm.text)">update</button>
+		<div>Message Text</div>
+		<textarea class="new_text" name="message_title" rows="10" cols="50" ng-model="vm.text"></textarea>
+		<div>
+			<button class="btn btn-default" ng-click="vm.modalClose($event)">cancel</button>
+			<button class="btn btn-primary" ng-click="vm.updateText(vm.text)">update</button>
+		</div>
+	</div>
+
+	<div class="edit_link_node" ng-show="vm.editType==='link_node'">
+		<input type="text" name="">
+		<button class="btn btn-primary">Link</button>
 	</div>
 
 </div>

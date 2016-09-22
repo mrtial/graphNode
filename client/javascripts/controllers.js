@@ -31,6 +31,7 @@
   		if(e.target.innerHTML==="Edit JSON"){vm.editType="json"}
   		else if(e.target.innerHTML==="Edit Button Title"){vm.editType="btn_title"}
   		else if(e.target.innerHTML==="Edit Message Text"){vm.editType="msg_text"}
+  		else if(e.target.innerHTML==="Link Node"){vm.editType="link_node"}
   	}
 
   	vm.modalClose = function(e){
@@ -74,18 +75,38 @@
 	  		// btn & postback
 	  		if(obj.button && obj.payload_type === "postback"){
 	  			vm.nodeType = "button_postback";
+	  			if(!obj.children){
+	  				vm.noChild = true;
+	  			} else {
+	  				vm.noChild = false;
+	  			}
 	  		}
 	  		// btn & not postback
 	  		else if(obj.button){
 	  			vm.nodeType = "button";
+	  			if(!obj.children){
+	  				vm.noChild = true;
+	  			} else {
+	  				vm.noChild = false;
+	  			}
 	  		}
 	  		// msg === msg
 	  		else if(!obj.button && obj.payload_type === "message"){
 	  			vm.nodeType="message"
+	  			if(!obj.children){
+	  				vm.noChild = true;
+	  			} else {
+	  				vm.noChild = false;
+	  			}
 	  		}
 	  		// msg != msg
 	  		else if(!obj.button && obj.payload_type === "bubble"){
 	  			vm.nodeType="bubble";
+	  			if(!obj.children){
+	  				vm.noChild = true;
+	  			} else {
+	  				vm.noChild = false;
+	  			}
 	  		} 
 	  	} 
 
@@ -108,10 +129,10 @@
 	  // 	$d3.generateD3(vm.treeData);
 	  // }
 	  vm.addNode = function(text){
-	  	
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button){
 	  		$api.getNextID().then(function(response){
+	  			console.log(response.data);
 	  			$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
 		  		.then(function(){
 		  			var button = vm.data.filter(function(d){return(d._id === vm.currentNode.parent.id )})[0].buttons
