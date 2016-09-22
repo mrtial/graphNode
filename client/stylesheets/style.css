@@ -9,10 +9,14 @@ html,body{
 /*==================================*/
 
 .tool{
+	position: absolute;
 	width: 250px;
+	height:auto;
+	top:0px;
+	/*bottom: 0px;*/
 	padding: 10px;
 	background-color: #0B3954;
-	margin:20px;
+	margin:10px;
 	border-radius: 5px;
 	box-shadow: 2px 2px 10px #888888;
 	color:white;
@@ -20,6 +24,10 @@ html,body{
 
 .tool > form{
 	margin-bottom: 10px;
+}
+
+input.form-control{
+	width: 100px !important; 
 }
 
 .menu{
@@ -41,12 +49,14 @@ html,body{
 }
 
 .box{
+	position: relative;
 	background-color: white;
 	width: 100%;
-	height:auto;
+	height:250px;
 	margin-top:20px;
 	border-radius: 3px;
 	color:black;
+	overflow: scroll;
 }
 /* modal */
 /* ================================*/
@@ -81,11 +91,9 @@ html,body{
 #d3_graph{
 	display: inline;
 	position: absolute;
-	top:0;
+	top:10px;
 	left:300px;
 	width: 100%;
-/*	left:50%;
-	transform: translateX(-50%);*/
 }
 
 .node rect {
@@ -106,6 +114,4 @@ html,body{
 
 svg{
 	position: absolute;
-/*	top:50px;
-	left:350px ;*/
 }
