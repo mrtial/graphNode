@@ -15,11 +15,11 @@
   <form class="form-inline">
 		<h5>Filter</h5>
   	<input type="text" class="form-control">
-  	<button class="btn btn-info btn-sm">Show Message</button>
+  	<button class="btn btn-info btn-sm" ng-click="vm.getAllNode()">Show Message</button>
   </form>
 
   <form class="form-inline">
-  	<input type="checkbox"> <span>Root Message Only</span>
+  	<input type="checkbox" ng-model="vm.rootOnly"> <span>Root Message Only</span>
   </form>
 
 	<div class="box">
