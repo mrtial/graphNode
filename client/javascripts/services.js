@@ -8,6 +8,22 @@
 		// ======================================================
 		function api($http){
 
+			// GET All Node
+			this.getAllNode = function(skip,limit){
+				return $http({
+					method: 'GET',
+					url: `http://remissionaire-staging.herokuapp.com/api/v1/all-nodes?skip=${skip}?limit=${limit}`
+				})
+			};
+
+			// GET All Root Node
+			this.getRootNode = function(skip,limit){
+				return $http({
+					method: 'GET',
+					url: `http://remissionaire-staging.herokuapp.com/api/v1/all-nodes?isRootOnly=1`
+				})
+			};
+
 			// GET DATA
 			this.getData = function(id){
 				return $http({
