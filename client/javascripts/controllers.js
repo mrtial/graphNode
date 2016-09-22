@@ -20,7 +20,7 @@
 	      $d3.generateD3(vm.treeData);
 
 		  }, function errorCallback(error) {
-		  	vm.errorMsg=error}
+		  	vm.errorMsg=error
 		  });
   	}
 
