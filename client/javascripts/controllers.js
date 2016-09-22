@@ -225,6 +225,16 @@
 	  	}
 	  }
 
+	  vm.createNewMsg = function(text){
+	  	$api.getNextID(text)
+	  	.then(function success(response){
+	  		$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
+	  		.then(function success(){
+	  			clearInputText();
+	  		}, function error(error){vm.errorMsg=error})
+	  	}, function error(error){vm.errorMsg=error})
+	  }
+
 	  // DELETE NODE
 	  // 1. delete id from db
 	  // 2. get all updated data from db
