@@ -48,6 +48,10 @@ input.form-control{
 	color:white;
 }
 
+input{
+	color:black !important;
+}
+
 .box{
 	position: relative;
 	background-color: white;
@@ -88,6 +92,7 @@ input.form-control{
 	z-index: 5;
 	background-color: white;
 	border-radius: 5px;
+	color:black;
 }
 
 .form-control{
