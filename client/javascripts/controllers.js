@@ -108,6 +108,7 @@
 	  // 	$d3.generateD3(vm.treeData);
 	  // }
 	  vm.addNode = function(text){
+	  	
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button){
 	  		$api.getNextID().then(function(response){
@@ -117,7 +118,11 @@
 		  			var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
 		  			button[index].next_node_id = response.data
 		  			$api.updateData(vm.currentID, "buttons="+JSON.stringify(button))
-		  			.then(function(){vm.getData(vm.nodeID);$d3.generateD3(vm.treeData);})
+		  			.then(function(){
+		  				vm.getData(vm.nodeID);
+		  			
+		  				$d3.generateD3(vm.treeData);
+		  			})
 		  		});
 	  		});
 
@@ -138,6 +143,7 @@
 		  		.then(function(){
 		  			$api.updateData(vm.currentID, "buttons="+JSON.stringify(button)).then(function(){
 		  			vm.getData(vm.nodeID);
+		  			
 		  			$d3.generateD3(vm.treeData);
 		  			 })
 		  		});
@@ -162,6 +168,7 @@
 	  // 2. get all updated data from db
 	  // 3. render d3
 	  vm.deleteNode = function(){
+
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button)
 	  	{
@@ -171,6 +178,7 @@
 
 	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 	  			vm.getData(vm.nodeID);
+	  			
 	  			$d3.generateD3(vm.treeData);
 	  		})
 
@@ -181,6 +189,7 @@
 		  	$api.deleteData(vm.currentID).then(function(){
 		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 		  			vm.getData(vm.nodeID);
+		  			
 		  			$d3.generateD3(vm.treeData);
 		  		})
 		  	});
@@ -199,11 +208,12 @@
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button)
 	  	{
+	  		debugger	
 	  		var parent_id = vm.currentNode.parent.id
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
 		  						.filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
 
-		  	$api.deleteAllData(vm.currentNode.children.id).then(function(){
+		  	$api.deleteAllData(vm.currentNode.children[0].id).then(function(){
 		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 	  				vm.getData(vm.nodeID);
 	  				$d3.generateD3(vm.treeData);
@@ -238,7 +248,8 @@
 	  	vm.menuShow = false;
 	  	vm.open = false;
 		var currentID = vm.currentNode.button?vm.currentNode.parent.id:vm.currentNode.id;
-		console.log(currentID);
+		console.log(JSONtoString(vm.json));
+
 	  	$api.updateData(currentID, JSONtoString(vm.json)).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
@@ -298,19 +309,21 @@
 		var key = Object.keys(obj);
 		var apiData = "";
 		key.forEach(function(d){
-			if(d !== "_id"){
+			if(d !== "_id" & d !== "buttons"){
 				apiData = apiData + d + "=" + JSON.stringify(obj[d]).replace(/\"/g, "") +"&"
+			}else if( d === "buttons"){
+				apiData = apiData + d + "=" + JSON.stringify(obj[d]) +"&"
 			}
 			
 		});
-		console.log(apiData)
-		return apiData.replace(/\"/g, "");
+
+		return apiData.slice(0, -1);
 	}
 
 	// D3 FUNCTION
 	// =================================================
 	function delete_node(node_name,treeData){
-	  $d3.removeNode()
+	  
 	  if('children' in treeData)
 	  {
 	    treeData.children.forEach(function(t,i){
@@ -327,7 +340,7 @@
 	var temp=0;
 
 	function add_node(node_name,treeData){
-	  $d3.removeNode()
+
 
 	  if(treeData.id === node_name){
 	  	var default_msg = { 

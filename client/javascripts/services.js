@@ -43,6 +43,21 @@
 				})
 			};
 
+
+			// DELETE All node /api/v1/node/<node_id>
+			this.deleteAllData = function(id){
+				return $http({
+					method: 'DELETE',
+					url: `http://remissionaire-staging.herokuapp.com/api/v1/all-nodes/${id}`,
+					headers: {
+					   'Content-Type':'application/x-www-form-urlencoded',
+					   'Cache-Control': 'no-cache',
+					}
+				})
+			};
+
+
+
 			// PUT /api/v1/node/test1 HTTP/1.1
 			this.updateData = function(id, data){
 				return $http({
@@ -51,7 +66,7 @@
 					headers: {
 					   'Content-Type':'application/x-www-form-urlencoded',
 					   'Authorization': '317545ec-3e7c-1e19-5a0e-faa45e261480',
-					   'Cache-Control': 'no-cache',
+					   'Cache-Control': 'f',
 					},
 					data:data
 				})
@@ -130,6 +145,7 @@
 
 
 			this.generateD3= function(treeData){
+			  this.removeNode()
 			  var margin = {top: 40, right: 120, bottom: 20, left: 120},
 			      width = 1200 - margin.right - margin.left,
 			      height = 1200 - margin.top - margin.bottom;
@@ -217,6 +233,8 @@
 			      	}
 
 			      });
+
+
 
 
 			    nodeEnter.append("text")
