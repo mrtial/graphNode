@@ -206,9 +206,9 @@
 			    //get width for each depth
 			    var maxDepth = Math.max.apply(Math,d3.selectAll("g.node").data().map(function(o){return o.depth;}));
 			    
-			    var LevelBoxWidth = new Array(maxDepth).fill(0);
+			    var LayerBoxWidth = new Array(maxDepth).fill(0);
 				
-			    LevelBoxWidth.forEach(function(d,i){
+			    LayerBoxWidth.forEach(function(d,i){
 			      var Objs = d3.selectAll("g.node").data().filter(function(d1){return d1.depth==(i+1)});
 			      var Objs_x =[];
 			      Objs.forEach(function(d1){Objs_x.push(d1.x)});
@@ -217,7 +217,7 @@
 				      for(j=0;j<(Objs_x.length-1);j++){
 				      	maxGap = Math.min(maxGap,(Objs_x[j]-Objs_x[j+1]-5));
 				      }
-			 	  LevelBoxWidth[i] = Math.max(maxGap,10);
+			 	  LayerBoxWidth[i] = Math.max(maxGap,10);
 			     });
 
 			    nodeEnter.append("rect")
@@ -225,7 +225,7 @@
 			        if(d.depth===0){
 			          return boxWidth;
 			        }else{
-			          return LevelBoxWidth[d.depth-1];
+			          return LayerBoxWidth[d.depth-1];
 			        }
 			       })
 			      .attr("x",function(d){return -1*d3.select(this).attr("width")/2;})
@@ -254,15 +254,50 @@
 
 
 			    nodeEnter.append("text")
-			      .attr("dy", ".35em")
+			      .attr("dy", "5")
 			      .attr("text-anchor", "middle")
 			      .html(function(d) {  return d.text; })
 			      .style("fill-opacity", 1)
 			      .call(wrap);
 
 			    // Dynamically adjust the height and width of message box
-			    d3.selectAll("rect").attr("height",function(d){return boxHeight + 10* (this.parentNode.lineNumber-1) ;})
+			    d3.selectAll("rect").attr("height",function(d){return boxHeight + 15* (this.parentNode.lineNumber-1) ;})
 
+
+			    // Calculate the max line of each layer
+			    var maxDepth =Math.max.apply(Math,d3.selectAll("g.node").data().map(function(o){return o.depth;}));
+			    var LayerLine = new Array(maxDepth+1).fill(0);
+				
+
+				var Depth_Height = [];
+
+			    d3.selectAll("rect").data().forEach(function(d,i){
+			    	Depth_Height.push({Depth: d.depth, 
+			    		Height: d3.select(d3.selectAll("rect")[0][i]).attr("height")})
+			    })
+
+
+			    LayerLine.forEach(function(d,i){
+			      var Objs = Depth_Height.filter(function(d1){return d1.Depth==i});
+			      LayerLine[i]=0;
+			      Objs.forEach(function(d1){
+			      	LayerLine[i]=Math.max(LayerLine[i],d1.Height);
+			      })
+				});
+			   	var CumSumLayerLine = []
+				LayerLine.reduce(function(a,b,i) { return CumSumLayerLine[i] = a+b; },0);
+			    
+			  	d3.selectAll("g.node") 	
+			      .attr("transform",function(d){
+			      	if(d.depth===0){
+			          return "translate(" + d.x +",0)" ;
+			        }else{
+			        	d.y = (CumSumLayerLine[d.depth-1] + d.depth*20) ;
+			          return "translate(" + d.x +"," + d.y +")" ; 
+			        }
+
+			       })
+			   /* debugger*/
 			    // Declare the links…
 			    var link = svg.selectAll("path.link")
 			      .data(links, function(d) { return d.target.id; });
@@ -280,10 +315,10 @@
 			            word,
 			            line = [],
 			            lineNumber = 1,
-			            lineHeight = 1.0, // ems
+			            lineHeight = 15, // ems
 			            y = text.attr("y"),
 			            dy = parseFloat(text.attr("dy")),
-			            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+			            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy);
 			            this.parentNode.lineNumber = 1;
 			        while (word = words.pop()) {
 			          line.push(word);
@@ -293,7 +328,7 @@
 			            line.pop();
 			            tspan.text(line.join(" "));
 			            line = [word];
-			            tspan = text.append("tspan").attr("x", 0).attr("y", 0).attr("dy", lineNumber * lineHeight + dy + "em").text(word);
+			            tspan = text.append("tspan").attr("x", 0).attr("y", 0).attr("dy", lineNumber * lineHeight + dy ).text(word);
 			            lineNumber = lineNumber +1;
 			          }
 			          //d3.select(this.parentNode).attr("lineNumber",lineNumber);
