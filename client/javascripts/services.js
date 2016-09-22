@@ -82,7 +82,7 @@
 					headers: {
 					   'Content-Type':'application/x-www-form-urlencoded',
 					   'Authorization': '317545ec-3e7c-1e19-5a0e-faa45e261480',
-					   'Cache-Control': 'f',
+					   'Cache-Control': 'no-cache',
 					},
 					data:data
 				})

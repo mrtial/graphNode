@@ -29,8 +29,9 @@
 	</div>
 
 	<div class="edit_link_node" ng-show="vm.editType==='link_node'">
-		<input type="text" name="">
-		<button class="btn btn-primary">Link</button>
+		<div>Link Existing Message</div>
+		<input type="text" name="" class="new_text" ng-model="vm.text" placeholder="enter node id">
+		<button class="btn btn-primary" ng-click="vm.linkNode(vm.text)">Link</button>
 	</div>
 
 </div>

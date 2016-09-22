@@ -49,7 +49,7 @@
   		if(e.target.innerHTML==="Edit JSON"){vm.editType="json"}
   		else if(e.target.innerHTML==="Edit Button Title"){vm.editType="btn_title"}
   		else if(e.target.innerHTML==="Edit Message Text"){vm.editType="msg_text"}
-  		else if(e.target.innerHTML==="Link Node"){vm.editType="link_node"}
+  		else if(e.target.innerHTML==="Link Message"){vm.editType="link_node"}
   	}
 
   	vm.modalClose = function(e){
@@ -211,17 +211,20 @@
 	  }
 
 	  vm.linkNode = function(text){
+	  	vm.menuShow = false;
+
 	  	if(vm.currentNode.button){
+
 	  		var parent_id = vm.currentNode.parent.id
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons;
 		  	var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
-		  	parrent_button[index].next_node_id = text;
+		  	parent_button[index].next_node_id = text;
 
 		  	$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
+		  		clearInputText();
 	  		}, function error(error){vm.errorMsg=error})
-
 	  	}
 	  }
 
