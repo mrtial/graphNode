@@ -14,7 +14,7 @@
 
   <form class="form-inline">
 		<h5>Filter</h5>
-  	<input type="text" class="form-control">
+  	<input type="text" class="form-control" ng-model="vm.filterText">
   	<button class="btn btn-info btn-sm" ng-click="vm.getAllNode()" ng-show="!vm.rootOnly">Show Message</button>
     <button class="btn btn-info btn-sm" ng-click="vm.getRootNode()" ng-show="vm.rootOnly">Show Message</button>
 
@@ -26,7 +26,7 @@
 
 	<div class="box">
    <ul>
-    <li ng-repeat="node in vm.showAllNode">{{node._id}}</li>
+    <li ng-repeat="node in vm.showAllNode | filter:{_id:vm.filterText}| limitTo:vm.quantity">{{node._id}}</li>
    </ul>
 	</div>
 

@@ -6,6 +6,7 @@
 		var vm = this;
 		vm.menuShow = false;
 		vm.errorMsg = "";
+		vm.quantity = 100;
 
 		// Toolbar Function
 		// =================================================
@@ -220,7 +221,8 @@
 		  	var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
 		  	parent_button[index].next_node_id = text;
 
-		  	$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
+		  	$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button))
+		  	.then(function success(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
 		  		clearInputText();
