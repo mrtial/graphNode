@@ -1,17 +1,18 @@
 (function(){
-	angular.module("App")
-	.controller("mainController", mainController)
+	angular.module('App')
+	.controller('mainController', mainController);
 
 	function mainController($http, $api, $rootScope, $d3){
 		var vm = this;
 		vm.menuShow = false;
-		vm.errorMsg = "";
+		vm.errorMsg = '';
 		vm.quantity = 100;
 
 		// Toolbar Function
 		// =================================================
     // GET DATA
   	vm.getData = function(id){
+  		vm.errorMsg = '';
   		$api.getData(id)
   		.then(function successCallback(response) {
   			vm.data = response.data;
@@ -21,27 +22,29 @@
 	      $d3.generateD3(vm.treeData);
 
 		  }, function errorCallback(error) {
-		  	vm.errorMsg=error
+		  	vm.errorMsg=error;
 		  });
-  	}
+  	};
 
   	vm.getAllNode = function(){
+  		vm.errorMsg = '';
   		$api.getAllNode()
   		.then(function success(response){
   			vm.showAllNode = response.data;
   		}, function error(response){
   			vm.errorMsg = response;
-  		})
+  		});
   	};
 
   	vm.getRootNode = function(){
+  		vm.errorMsg = '';
   		$api.getRootNode()
   		.then(function success(response){
   			vm.showAllNode = response.data;
   		}, function error(response){
   			vm.errorMsg = response;
-  		})
-  	}
+  		});
+  	};
 
   	// Modal Function : Open / Close
   	// =================================================
@@ -51,7 +54,7 @@
   		else if(e.target.innerHTML==="Edit Button Title"){vm.editType="btn_title"}
   		else if(e.target.innerHTML==="Edit Message Text"){vm.editType="msg_text"}
   		else if(e.target.innerHTML==="Link Message"){vm.editType="link_node"}
-  	}
+  	};
 
   	vm.modalClose = function(e){
   		if(e && e.target.id==="modal_window" || e.target.innerHTML ==="cancel"){
@@ -149,6 +152,7 @@
 	  // 	$d3.generateD3(vm.treeData);
 	  // }
 	  vm.addNode = function(text){
+	  	vm.errorMsg = '';
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button){
 
@@ -164,7 +168,7 @@
 		  				vm.getData(vm.nodeID);
 		  			
 		  				$d3.generateD3(vm.treeData);
-		  			})
+		  			});
 		  		},function error(error){vm.errorMsg = error;});
 	  		}, function error(error){
 	  				vm.errorMsg = error;
@@ -181,14 +185,14 @@
 					"type": "postback",
 					"title": "New button",
 					"next_node_id": response.data
-	 	  	  	})
+	 	  	  	});
 
 		  		$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
 		  		.then(function success(){
 		  			$api.updateData(vm.currentID, "buttons="+JSON.stringify(button)).then(function(){
 		  			vm.getData(vm.nodeID);
 		  			$d3.generateD3(vm.treeData);
-		  			 })
+		  			 });
 		  		}, function error(error){vm.errorMsg=error});
 	  		}, function error(error){vm.errorMsg=error})
 	  	  	
@@ -197,9 +201,10 @@
 	  	// clear text input
 	  	clearInputText();
 
-	  }
+	  };
 
 	  vm.addNewNode =function(text){
+	  	vm.errorMsg = '';
 
 	  	$api.getNextID(text).then(function success(response){
 	  			$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
@@ -209,9 +214,10 @@
 		  				$d3.generateD3(vm.treeData);
 		  			}, function error(error){vm.errorMsg=error});
 		  		}, function error(error){vm.errorMsg=error});
-	  }
+	  };
 
 	  vm.linkNode = function(text){
+	  	vm.errorMsg = '';
 	  	vm.menuShow = false;
 
 	  	if(vm.currentNode.button){
@@ -226,25 +232,27 @@
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
 		  		clearInputText();
-	  		}, function error(error){vm.errorMsg=error})
+	  		}, function error(error){vm.errorMsg=error});
 	  	}
-	  }
+	  };
 
 	  vm.createNewMsg = function(text){
+	  	vm.errorMsg = '';
 	  	$api.getNextID(text)
 	  	.then(function success(response){
 	  		$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
 	  		.then(function success(){
 	  			clearInputText();
-	  		}, function error(error){vm.errorMsg=error})
-	  	}, function error(error){vm.errorMsg=error})
-	  }
+	  		}, function error(error){vm.errorMsg=error});
+	  	}, function error(error){vm.errorMsg=error});
+	  };
 
 	  // DELETE NODE
 	  // 1. delete id from db
 	  // 2. get all updated data from db
 	  // 3. render d3
 	  vm.deleteNode = function(){
+	  	vm.errorMsg = '';
 
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button)
@@ -257,7 +265,7 @@
 	  			vm.getData(vm.nodeID);
 	  			
 	  			$d3.generateD3(vm.treeData);
-	  		},function error(error){vm.errorMsg=error})
+	  		},function error(error){vm.errorMsg=error});
 
 	  	}else if( "parent" in vm.currentNode){
 	  		var parent_id = vm.currentNode.parent.parent.id;
@@ -268,33 +276,34 @@
 		  			vm.getData(vm.nodeID);
 		  			
 		  			$d3.generateD3(vm.treeData);
-		  		}, function error(error){vm.errorMsg=error})
-		  	}, function error(error){vm.errorMsg=error});
+		  		}, function error(error){vm.errorMsg=error;});
+		  	}, function error(error){vm.errorMsg=error;});
 	  	}else{
 	  		
 		  	$api.deleteData(vm.currentID).then(function success(){
 		  			vm.getData(vm.nodeID);
 		  			$d3.removeNode();
-		  	},function error(error){vm.errorMsg=error});
+		  	},function error(error){vm.errorMsg=error;});
 
 	  	}
-	  }
+	  };
 
 
 	  vm.deleteAllNode = function(){
+	  	vm.errorMsg = '';
 	  	vm.menuShow = false;
 	  	if(vm.currentNode.button)
 	  	{
-	  		var parent_id = vm.currentNode.parent.id
-		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
-		  						.filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
+	  		var parent_id = vm.currentNode.parent.id;
+		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id );})[0].buttons
+		  						.filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id);});
 
 		  	$api.deleteAllData(vm.currentNode.children[0].id).then(function success(){
 		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 	  				vm.getData(vm.nodeID);
 	  				$d3.generateD3(vm.treeData);
-	  			},function error(error){vm.errorMsg=error})
-		  	}, function error(error){vm.errorMsg=error})
+	  			},function error(error){vm.errorMsg=error;});
+		  	}, function error(error){vm.errorMsg=error;});
 	  		
 
 	  	}else if( "parent" in vm.currentNode){
@@ -321,6 +330,7 @@
 	  // 2. get all updated data from db
 	  // 3. render d3
 	  vm.updateDB = function(){
+	  	vm.errorMsg = '';
 	  	vm.menuShow = false;
 	  	vm.open = false;
 		var currentID = vm.currentNode.button?vm.currentNode.parent.id:vm.currentNode.id;
@@ -330,15 +340,16 @@
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
 
-	  		}, function error(error){vm.errorMsg=error})
-	  }
+	  		}, function error(error){vm.errorMsg=error;});
+	  };
 
 	  vm.updateText = function(text){
+	  	vm.errorMsg = '';
 
 	  	vm.menuShow = false;
 	  	vm.open = false;	
 	  	if(vm.currentNode.button){
-	  		var parent_id = vm.currentNode.parent.id
+	  		var parent_id = vm.currentNode.parent.id;
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
 	
 			parent_button.filter(function(d){return(d.next_node_id === vm.currentNode.children[0].id)})[0].title = text;
@@ -346,22 +357,22 @@
 	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
-	  		}, function error(error){vm.errorMsg=error})
+	  		}, function error(error){vm.errorMsg=error;});
 	  	}else{
 	  		$api.updateData(vm.currentID, "message_text="+ text).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
-	  		}, function error(error){vm.errorMsg=error})
+	  		}, function error(error){vm.errorMsg=error;});
 	  	}
 
 	  	// clear text input
 	  	clearInputText();
-	  }
+	  };
 
 	  function clearInputText(){
 	  	var inputText = document.getElementsByClassName("new_text");
 	  	for(var i=0;i<inputText.length;i++){
-	  		inputText[i].value="";
+	  		inputText[i].value='';
 	  	}
 	  }
 
@@ -398,70 +409,70 @@
 
 	// D3 FUNCTION
 	// =================================================
-	function delete_node(node_name,treeData){
+	// function delete_node(node_name,treeData){
 	  
-	  if('children' in treeData)
-	  {
-	    treeData.children.forEach(function(t,i){
-	    if(t.id === node_name){
-	        treeData.children.splice(i,1);
-	    }else{
-	      t = $d3.delete_node(node_name,t);
-	    }
-	  });
-	  }
-	  return treeData;
-	}
+	//   if('children' in treeData)
+	//   {
+	//     treeData.children.forEach(function(t,i){
+	//     if(t.id === node_name){
+	//         treeData.children.splice(i,1);
+	//     }else{
+	//       t = $d3.delete_node(node_name,t);
+	//     }
+	//   });
+	//   }
+	//   return treeData;
+	// }
 
-	var temp=0;
+	// var temp=0;
 
-	function add_node(node_name,treeData){
+	// function add_node(node_name,treeData){
 
 
-	  if(treeData.id === node_name){
-	  	var default_msg = { 
-					"id" : "temp"+temp,
-					"text" : "New message",
-					"button" : false,
-					"hidden" : false,
-					"payload_type" : "message",
-					"children" : []
-				 };
-		temp = temp +1;	
+	//   if(treeData.id === node_name){
+	//   	var default_msg = { 
+	// 				"id" : "temp"+temp,
+	// 				"text" : "New message",
+	// 				"button" : false,
+	// 				"hidden" : false,
+	// 				"payload_type" : "message",
+	// 				"children" : []
+	// 			 };
+	// 	temp = temp +1;	
 		
-    	if(treeData.button === true){
-    		treeData.children=[default_msg];
-    	}else{
-    		var max_n = 0;
+ //    	if(treeData.button === true){
+ //    		treeData.children=[default_msg];
+ //    	}else{
+ //    		var max_n = 0;
 
-    		if('children' in treeData)
-    		{
-    			treeData.children.forEach(function(d){
-						max_n = Math.max(max_n, parseInt(d.id.replace( treeData.id + "_button" ,"")))
-					});
-    		}else{
-    			treeData.children = [];
-    		}
+ //    		if('children' in treeData)
+ //    		{
+ //    			treeData.children.forEach(function(d){
+	// 					max_n = Math.max(max_n, parseInt(d.id.replace( treeData.id + "_button" ,"")))
+	// 				});
+ //    		}else{
+ //    			treeData.children = [];
+ //    		}
 
-				treeData.children.push({
-					"id" : treeData.id + "_button" + (max_n +1),
-					"text" : "button",
-					"button" : true,
-					"hidden" : false,
-					"payload_type" : "postback",
-					"children" : [default_msg]
-				});
+	// 			treeData.children.push({
+	// 				"id" : treeData.id + "_button" + (max_n +1),
+	// 				"text" : "button",
+	// 				"button" : true,
+	// 				"hidden" : false,
+	// 				"payload_type" : "postback",
+	// 				"children" : [default_msg]
+	// 			});
 
-    	}
-	  }
+ //    	}
+	//   }
 
 
-	  if('children' in treeData)
-	  {
-	    treeData.children.forEach(function(t,i){
-	      t = addNode_node(node_name,t);
-	   	});}
-	  return treeData;
-	}
+	//   if('children' in treeData)
+	//   {
+	//     treeData.children.forEach(function(t,i){
+	//       t = addNode_node(node_name,t);
+	//    	});}
+	//   return treeData;
+	// }
 
 })()
