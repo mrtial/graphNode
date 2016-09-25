@@ -152,7 +152,7 @@
 			      "button" : true,
 			      "hidden" : b.type === "hidden",
 			      "payload_type" : b.type,
-			      "children" : b.next_node_id===""?[]:[self.build(b.next_node_id, data)]
+			      "children" : (b.next_node_id==="" || b.next_node_id== null )?[]:[self.build(b.next_node_id, data)]
 			    });	
 
 			    
@@ -193,7 +193,7 @@
 
 			    // Normalize for fixed-depth.
 			    nodes.forEach(function(d) { d.y = d.depth * 100; });
-
+debugger
 			    // Declare the nodes…
 			    var node = svg.selectAll("g.node")
 			      .data(nodes, function(d) { return d.id || (d.id = ++i); });
