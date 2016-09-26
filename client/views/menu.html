@@ -1,44 +1,44 @@
 <div class="menu">
 	
 	<div ng-show='vm.nodeType === "button_postback"'>
-		<div class="fn" ng-show="vm.noChild">Add Message 
+		<div class="fn" ng-show="vm.noChild" ng-hide="vm.duplicate">Add Message 
 			<input class="new_text" type="" name="" placeholder="(optional prefix)" ng-model="vm.prefix">
 			<button class="btn btn-primary btn-sm" ng-click="vm.addNode(vm.prefix)">Add</button>
 		</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Button</div>
-		<div class="fn" ng-click="vm.deleteAllNode()">Delete All</div>
-		<div class="fn" ng-click="vm.modalOpen($event)" ng-show="vm.noChild" >Link Message</div>
-		<div class="fn" ng-click="vm.modalOpen($event)">Edit Button Title</div>
-		<div class="fn" ng-click="vm.modalOpen($event)">Edit JSON</div>
+		<div class="fn" ng-click="vm.deleteAllNode()" ng-hide="vm.duplicate">Delete All</div>
+		<div class="fn" ng-click="vm.modalOpen($event)" ng-show="vm.noChild" ng-hide="vm.duplicate">Link Message</div>
+		<div class="fn" ng-click="vm.modalOpen($event)" ng-hide="vm.duplicate">Edit Button Title</div>
+		<div class="fn" ng-click="vm.modalOpen($event)" ng-hide="vm.duplicate">Edit JSON</div>
 	</div>
 
 
 	<div ng-show='vm.nodeType === "button"'>
-		<div class="fn" ng-show="vm.noChild">Add Message 
+		<div class="fn" ng-show="vm.noChild" ng-hide="vm.duplicate">Add Message 
 			<input class="new_text" type="" name="" placeholder="(optional prefix)" ng-model="vm.prefix">
 			<button class="btn btn-primary btn-sm" ng-click="vm.addNode(vm.prefix)">Add</button>
 		</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Button</div>
-		<div class="fn" ng-click="vm.deleteAllNode()">Delete All</div>
-		<div class="fn" ng-click="vm.modalOpen($event)" ng-show="vm.noChild">Link Message</div>
-		<div class="fn" ng-click="vm.modalOpen($event)">Edit JSON</div>
+		<div class="fn" ng-click="vm.deleteAllNode()" ng-hide="vm.duplicate">Delete All</div>
+		<div class="fn" ng-click="vm.modalOpen($event)" ng-show="vm.noChild" ng-hide="vm.duplicate">Link Message</div>
+		<div class="fn" ng-click="vm.modalOpen($event)" ng-hide="vm.duplicate">Edit JSON</div>
 	</div>
 
 
 	<div ng-show='vm.nodeType === "message"'>
-		<div class="fn" ng-click="vm.addNode()">Add Button</div>
+		<div class="fn" ng-click="vm.addNode()" ng-hide="vm.duplicate">Add Button</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Message</div>
-		<div class="fn" ng-click="vm.deleteAllNode()">Delete All</div>
-		<div class="fn" ng-click="vm.modalOpen($event)">Edit Message Text</div>
-		<div class="fn" ng-click="vm.modalOpen($event)">Edit JSON</div>
+		<div class="fn" ng-click="vm.deleteAllNode()" ng-hide="vm.duplicate">Delete All</div>
+		<div class="fn" ng-click="vm.modalOpen($event)" ng-hide="vm.duplicate">Edit Message Text</div>
+		<div class="fn" ng-click="vm.modalOpen($event)" ng-hide="vm.duplicate">Edit JSON</div>
 	</div>
 
 
 	<div ng-show='vm.nodeType === "bubble"'>
 		<div class="fn" ng-click="vm.addNode()">Add Button</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Message</div>
-		<div class="fn" ng-click="vm.deleteAllNode()">Delete All</div>
-		<div class="fn" ng-click="vm.modalOpen($event)">Edit JSON</div>
+		<div class="fn" ng-click="vm.deleteAllNode()" ng-hide="vm.duplicate">Delete All</div>
+		<div class="fn" ng-click="vm.modalOpen($event)" ng-hide="vm.duplicate">Edit JSON</div>
 	</div>
 </div>
 

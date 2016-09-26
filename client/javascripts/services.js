@@ -135,28 +135,46 @@
 
 			  var node = data[data.map(function(e) {return e._id}).indexOf(node_name)];
 			  
-			  var tree =    { 
-			    "id" : node._id,
-			    "text" : node.message_text,
-			    "button" : false,
-			    "hidden" : node.type === "hidden",
-			    "payload_type" : node.payload_type,
-			    "children" : []
-			  };
+			  if(node ==null) {return {}}
 
-			  node.buttons.forEach(function(b,i){
+			  if( "dup" in node){
 
-			  	tree.children.push({
-			      "id" : node._id + "_button" + i,
-			      "text" : b.title,
-			      "button" : true,
-			      "hidden" : b.type === "hidden",
-			      "payload_type" : b.type,
-			      "children" : (b.next_node_id==="" || b.next_node_id== null )?[]:[self.build(b.next_node_id, data)]
-			    });	
+			  	var tree =    { 
+				    "id" : node._id,
+				    "text" : node.message_text + " (COPY)",
+				    "button" : false,
+				    "Duplicate" : true,
+				    "hidden" : node.type === "hidden",
+				    "payload_type" : node.payload_type,
+				    "children" : []
+				  };
 
-			    
-			  });
+			  }else{
+
+				  var tree =    { 
+				    "id" : node._id,
+				    "text" : node.message_text,
+				    "button" : false,
+				    "Duplicate" : false,
+				    "hidden" : node.type === "hidden",
+				    "payload_type" : node.payload_type,
+				    "children" : []
+				  };
+
+				  node.buttons.forEach(function(b,i){
+
+				  	tree.children.push({
+				      "id" : node._id + "_button" + i,
+				      "text" : b.title,
+				      "button" : true,
+				      "hidden" : b.type === "hidden",
+				      "payload_type" : b.type,
+				      "children" : (b.next_node_id==="" || b.next_node_id== null )?[]:[self.build(b.next_node_id, data)]
+				    });	
+
+				    
+				  });
+				};
 			  return tree;
 			}
 
@@ -193,7 +211,7 @@
 
 			    // Normalize for fixed-depth.
 			    nodes.forEach(function(d) { d.y = d.depth * 100; });
-debugger
+
 			    // Declare the nodes…
 			    var node = svg.selectAll("g.node")
 			      .data(nodes, function(d) { return d.id || (d.id = ++i); });
@@ -248,8 +266,10 @@ debugger
 			      	if(d.button===true)
 			      	{
 			      		return d3.select(this).attr("stroke");
+			      	}else if(d.Duplicate === true){
+			      		return "#E2E2E2";
 			      	}else{
-			      		return "#F2F2F2";
+			      		return "#FFFFFF";
 			      	}
 
 			      });
