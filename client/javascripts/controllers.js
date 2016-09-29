@@ -44,7 +44,7 @@
 
 	      // BUILD D3
 	      $d3.generateD3(vm.treeData);
-
+	      cleanDuplicate(vm.data);
 		  }, function errorCallback(error) {
 		  	vm.errorMsg=error;
 		  }); 
@@ -105,23 +105,43 @@
 
 	  		// find current node in vm.data
 	  		// bind current node json to $rootScope
+
+
+
 	  		if (obj.button){
 	  			var jsonData = findNode(obj.parent.id, vm.data);
 	  			vm.currentID = obj.parent.id;
 
+
+
 	  		}else{
 	  			var jsonData = findNode(obj.id, vm.data);
 	  			vm.currentID = obj.id;
+				var re = new RegExp("_duplicate" + jsonData.dup + "$","g");
+				vm.currentID = vm.currentID.replace(re,"")
+
 	  		}
 
-	  		vm.json = prettyPrint(JSON.stringify(jsonData));
+	  		var jsonData_copy = Object.assign({},jsonData);
+			if("buttons" in jsonData_copy){
+				jsonData_copy.buttons.forEach(function(d){
+					var next_node = findNode(d.next_node_id, vm.data);
+					if (next_node != null){
+						if( "dup" in next_node){
+							var re = new RegExp("_duplicate" + next_node.dup + "$","g");
+							d.next_node_id = d.next_node_id.replace(re,"")
+						}
+					}
+					
+				})
+			} 
 
+	  		vm.json = prettyPrint(JSON.stringify(jsonData_copy));
 
 
 	  		vm.currentNode = obj;
-	  		console.log(obj);
-	  		console.log(obj.Duplicate);
 
+	  		
 	  		if(obj.Duplicate){
 	  			vm.duplicate=true;
 	  		} else{
@@ -203,6 +223,7 @@
 		  				vm.getData(vm.nodeID);
 		  			
 		  				$d3.generateD3(vm.treeData);
+		  				cleanDuplicate(vm.data);
 		  			});
 		  		},function error(error){vm.errorMsg = error;});
 	  		}, function error(error){
@@ -227,6 +248,7 @@
 		  			$api.updateData(vm.currentID, "buttons="+JSON.stringify(button)).then(function(){
 		  			vm.getData(vm.nodeID);
 		  			$d3.generateD3(vm.treeData);
+		  			cleanDuplicate(vm.data);
 		  			 });
 		  		}, function error(error){vm.errorMsg=error});
 	  		}, function error(error){vm.errorMsg=error})
@@ -247,6 +269,7 @@
 		  				vm.getData(vm.nodeID);
 		  			
 		  				$d3.generateD3(vm.treeData);
+		  				cleanDuplicate(vm.data);
 		  			}, function error(error){vm.errorMsg=error});
 		  		}, function error(error){vm.errorMsg=error});
 	  };
@@ -269,6 +292,7 @@
 			  	.then(function success(){
 		  			vm.getData(vm.nodeID);
 		  			$d3.generateD3(vm.treeData);
+		  			cleanDuplicate(vm.data);
 			  		clearInputText();
 		  		}, function error(error){vm.errorMsg=error});
 			}, function error(error){vm.errorMsg=error; })		  	
@@ -300,17 +324,18 @@
 		  	var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
 	  		var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
 	  		parent_button.splice(index,1);
-		  						// .filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
-		  	
-
+		  						// .filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)}
+	  		// vm.json = prettyPrint(JSON.stringify(jsonData_copy));
 	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 	  			vm.getData(vm.nodeID);
 	  			
 	  			$d3.generateD3(vm.treeData);
+	  			cleanDuplicate(vm.data);
 	  		},function error(error){vm.errorMsg=error});
 
 	  	}else if( "parent" in vm.currentNode){
 	  		var parent_id = vm.currentNode.parent.parent.id;
+	  		debugger
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons;
 		  	parent_button.filter(function(d){return(d.next_node_id === vm.currentID)})[0].next_node_id = "";
 		  	$api.deleteData(vm.currentID).then(function success(){
@@ -318,6 +343,7 @@
 		  			vm.getData(vm.nodeID);
 		  			
 		  			$d3.generateD3(vm.treeData);
+		  			cleanDuplicate(vm.data);
 		  		}, function error(error){vm.errorMsg=error;});
 		  	}, function error(error){vm.errorMsg=error;});
 	  	}else{
@@ -344,6 +370,7 @@
 		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 	  				vm.getData(vm.nodeID);
 	  				$d3.generateD3(vm.treeData);
+	  				cleanDuplicate(vm.data);
 	  			},function error(error){vm.errorMsg=error;});
 		  	}, function error(error){vm.errorMsg=error;});
 	  		
@@ -356,6 +383,7 @@
 		  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 		  			vm.getData(vm.nodeID);
 		  			$d3.generateD3(vm.treeData);
+		  			cleanDuplicate(vm.data);
 		  		}, function error(error){vm.errorMsg=error})
 		  	},function error(error){vm.errorMsg=error});
 	  	}else{
@@ -381,6 +409,7 @@
 	  	$api.updateData(currentID, JSONtoString(vm.json)).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
+	  			cleanDuplicate(vm.data);
 
 	  		}, function error(error){vm.errorMsg=error;});
 	  };
@@ -399,11 +428,13 @@
 	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
+	  			cleanDuplicate(vm.data);
 	  		}, function error(error){vm.errorMsg=error;});
 	  	}else{
 	  		$api.updateData(vm.currentID, "message_text="+ text).then(function(){
 	  			vm.getData(vm.nodeID);
 	  			$d3.generateD3(vm.treeData);
+	  			cleanDuplicate(vm.data);
 	  		}, function error(error){vm.errorMsg=error;});
 	  	}
 
@@ -447,6 +478,25 @@
 		});
 
 		return apiData.slice(0, -1);
+	}
+
+	cleanDuplicate = function(data){
+		
+		data.forEach(function(vmd){
+			if("buttons" in vmd){
+				vmd.buttons.forEach(function(d){
+					var next_node = findNode(d.next_node_id, data);
+					if (next_node != null){
+						if( "dup" in next_node){
+							var re = new RegExp("_duplicate" + next_node.dup + "$","g");
+							d.next_node_id = d.next_node_id.replace(re,"")
+						}
+					}
+				
+				})
+			}
+	
+		})
 	}
 
 	// D3 FUNCTION
