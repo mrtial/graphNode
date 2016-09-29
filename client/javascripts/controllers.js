@@ -16,14 +16,38 @@
   		$api.getData(id)
   		.then(function successCallback(response) {
   			vm.data = response.data;
+
+  		  //Duplicate the multiParent Nodes
+  		  vm.data.forEach(function(d){
+  		  	var dup = 0;
+  		  	vm.data.forEach(function(d1){
+  		  		d1.buttons.forEach(function(d2){
+  		  			if( (d2.next_node_id === d._id) & !('dup' in d1) ){
+  		  				dup++;
+  		  				if(dup>1)
+  		  				{
+  		  					var temp_obj = Object.assign({},d);
+	  		  				temp_obj._id=temp_obj._id +"_duplicate"+dup;
+	  		  				temp_obj.dup=dup;
+	  		  				vm.data.push(temp_obj);
+	  		  				d2.next_node_id = temp_obj._id;
+  		  				}
+  		  			}
+  		  		})
+  		  	});
+
+  		  });
+
+
 	      // RE-STRUCTURE DATA FOR D3
 	      vm.treeData = $d3.build(vm.nodeID, vm.data);
+
 	      // BUILD D3
 	      $d3.generateD3(vm.treeData);
 
 		  }, function errorCallback(error) {
 		  	vm.errorMsg=error;
-		  });
+		  }); 
   	};
 
   	vm.getAllNode = function(){
@@ -72,6 +96,7 @@
 
 	  	menuBox.style.top = e.clientY+"px";
 	  	menuBox.style.left = e.clientX+"px";
+	  	vm.duplicate=false;
 
 	  	if(e.target.tagName==="rect" || e.target.parentElement.previousSibling.tagName ==="rect"){
 	  		vm.menuShow = true;
@@ -94,6 +119,16 @@
 
 
 	  		vm.currentNode = obj;
+	  		console.log(obj);
+	  		console.log(obj.Duplicate);
+
+	  		if(obj.Duplicate){
+	  			vm.duplicate=true;
+	  		} else{
+	  			vm.duplicate=false;
+	  		};
+
+	  		console.log(vm.duplicate)
 
 	  		// btn & postback
 	  		if(obj.button && obj.payload_type === "postback"){
@@ -219,20 +254,24 @@
 	  vm.linkNode = function(text){
 	  	vm.errorMsg = '';
 	  	vm.menuShow = false;
+	  	vm.open = false;
 
 	  	if(vm.currentNode.button){
 
 	  		var parent_id = vm.currentNode.parent.id
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons;
 		  	var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
-		  	parent_button[index].next_node_id = text;
+			
+			$api.getData(text).then(function success(response){
+				parent_button[index].next_node_id = text;
 
-		  	$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button))
-		  	.then(function success(){
-	  			vm.getData(vm.nodeID);
-	  			$d3.generateD3(vm.treeData);
-		  		clearInputText();
-	  		}, function error(error){vm.errorMsg=error});
+			  	$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button))
+			  	.then(function success(){
+		  			vm.getData(vm.nodeID);
+		  			$d3.generateD3(vm.treeData);
+			  		clearInputText();
+		  		}, function error(error){vm.errorMsg=error});
+			}, function error(error){vm.errorMsg=error; })		  	
 	  	}
 	  };
 
@@ -258,8 +297,11 @@
 	  	if(vm.currentNode.button)
 	  	{
 	  		var parent_id = vm.currentNode.parent.id
-		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
-		  						.filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
+		  	var index = vm.currentNode.parent.children.indexOf(vm.currentNode)
+	  		var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons
+	  		parent_button.splice(index,1);
+		  						// .filter(function(d){return(d.next_node_id !== vm.currentNode.children[0].id)});
+		  	
 
 	  		$api.updateData(parent_id, "buttons="+JSON.stringify(parent_button)).then(function success(){
 	  			vm.getData(vm.nodeID);
