@@ -13,7 +13,7 @@
 				return $http({
 					method: 'GET',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/all-nodes?skip=${skip}?limit=${limit}`
-				})
+				});
 			};
 
 			// GET All Root Node
@@ -21,7 +21,7 @@
 				return $http({
 					method: 'GET',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/all-nodes?isRootOnly=1`
-				})
+				});
 			};
 
 			// GET DATA
@@ -44,7 +44,7 @@
 				     'Cache-Control': 'no-cache',
 				  },
 				  data: data
-				})
+				});
 			};
 
 			// DELETE node /api/v1/node/<node_id>
@@ -56,7 +56,7 @@
 					   'Content-Type':'application/x-www-form-urlencoded',
 					   'Cache-Control': 'no-cache',
 					}
-				})
+				});
 			};
 
 
@@ -69,7 +69,7 @@
 					   'Content-Type':'application/x-www-form-urlencoded',
 					   'Cache-Control': 'no-cache',
 					}
-				})
+				});
 			};
 
 
@@ -85,15 +85,14 @@
 					   'Cache-Control': 'no-cache',
 					},
 					data:data
-				})
+				});
 			};
 
 
 			// Generate new id
 			// POST /api/v1/node/next-id HTTP/1.1
 			this.getNextID = function(prefix){
-				if(prefix){ prefix="prefix="+prefix}
-				console.log(prefix)
+				if(prefix){ prefix='prefix='+prefix;}
 				return $http({
 					method: 'POST',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/node/next-id`,
@@ -103,7 +102,7 @@
 					   'Cache-Control': 'no-cache',
 					},
 					data:prefix
-				})
+				});
 			};
 
 
@@ -112,8 +111,8 @@
 				return $http({
 					method: 'POST',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/repopulate-nodes`,
-				})
-			}
+				});
+			};
 		}
 
 		// D3 FUNCTION
@@ -125,7 +124,7 @@
 			  while (node && node.firstChild) {
 			      node.removeChild(node.firstChild);
 			  }
-			}
+			};
 
 			this.build = function(node_name, data){
 			  var self = this;
@@ -133,7 +132,7 @@
 			  this.removeNode()
 
 
-			  var node = data[data.map(function(e) {return e._id}).indexOf(node_name)];
+			  var node = data[data.map(function(e) {return e._id; }).indexOf(node_name)];
 			  
 			  var tree =    { 
 			    "id" : node._id,
@@ -154,8 +153,6 @@
 			      "payload_type" : b.type,
 			      "children" : b.next_node_id===""?[]:[self.build(b.next_node_id, data)]
 			    });	
-
-			    
 			  });
 			  return tree;
 			}
@@ -341,8 +338,8 @@
 			      });
 			    } // wrap 
 			  } // update
-			}
+			};
 
 		}
 
-})()
+})();
