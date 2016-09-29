@@ -13,7 +13,7 @@
 				return $http({
 					method: 'GET',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/all-nodes?skip=${skip}?limit=${limit}`
-				});
+				})
 			};
 
 			// GET All Root Node
@@ -21,7 +21,7 @@
 				return $http({
 					method: 'GET',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/all-nodes?isRootOnly=1`
-				});
+				})
 			};
 
 			// GET DATA
@@ -44,7 +44,7 @@
 				     'Cache-Control': 'no-cache',
 				  },
 				  data: data
-				});
+				})
 			};
 
 			// DELETE node /api/v1/node/<node_id>
@@ -56,7 +56,7 @@
 					   'Content-Type':'application/x-www-form-urlencoded',
 					   'Cache-Control': 'no-cache',
 					}
-				});
+				})
 			};
 
 
@@ -69,7 +69,7 @@
 					   'Content-Type':'application/x-www-form-urlencoded',
 					   'Cache-Control': 'no-cache',
 					}
-				});
+				})
 			};
 
 
@@ -85,14 +85,15 @@
 					   'Cache-Control': 'no-cache',
 					},
 					data:data
-				});
+				})
 			};
 
 
 			// Generate new id
 			// POST /api/v1/node/next-id HTTP/1.1
 			this.getNextID = function(prefix){
-				if(prefix){ prefix='prefix='+prefix;}
+				if(prefix){ prefix="prefix="+prefix}
+				console.log(prefix)
 				return $http({
 					method: 'POST',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/node/next-id`,
@@ -102,7 +103,7 @@
 					   'Cache-Control': 'no-cache',
 					},
 					data:prefix
-				});
+				})
 			};
 
 
@@ -111,8 +112,8 @@
 				return $http({
 					method: 'POST',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/repopulate-nodes`,
-				});
-			};
+				})
+			}
 		}
 
 		// D3 FUNCTION
@@ -124,7 +125,7 @@
 			  while (node && node.firstChild) {
 			      node.removeChild(node.firstChild);
 			  }
-			};
+			}
 
 			this.build = function(node_name, data){
 			  var self = this;
@@ -132,30 +133,9 @@
 			  this.removeNode()
 
 
-			  var node = data[data.map(function(e) {return e._id; }).indexOf(node_name)];
+			  var node = data[data.map(function(e) {return e._id}).indexOf(node_name)];
 			  
-			  var tree =    { 
-			    "id" : node._id,
-			    "text" : node.message_text,
-			    "button" : false,
-			    "hidden" : node.type === "hidden",
-			    "payload_type" : node.payload_type,
-			    "children" : []
-			  };
-
-			  node.buttons.forEach(function(b,i){
-
-			  	tree.children.push({
-			      "id" : node._id + "_button" + i,
-			      "text" : b.title,
-			      "button" : true,
-			      "hidden" : b.type === "hidden",
-			      "payload_type" : b.type,
-			      "children" : b.next_node_id===""?[]:[self.build(b.next_node_id, data)]
-			    });	
-			  });
-
-			  if(node ==null) {return {};}
+			  if(node ==null) {return {}}
 
 			  if( "dup" in node){
 
@@ -182,25 +162,24 @@
 				  };
 
 				  node.buttons.forEach(function(b,i){
-
+				  	var ind = data.map(function(e) {return e._id}).indexOf(b.next_node_id);
 				  	tree.children.push({
 				      "id" : node._id + "_button" + i,
-				      "text" : b.title,
+				      "text" : ind >=0?b.title:(b.title + " (" + b.next_node_id + " dose not exist)"),
 				      "button" : true,
 				      "hidden" : b.type === "hidden",
 				      "payload_type" : b.type,
-				      "children" : (b.next_node_id==="" || b.next_node_id== null )?[]:[self.build(b.next_node_id, data)]
+				      "children" : (ind <0 || b.next_node_id==="" || b.next_node_id== null )?[]:[self.build(b.next_node_id, data)]
 				    });	
 
 				    
 				  });
 				};
-
 			  return tree;
-			};
+			}
 
 
-			
+
 			this.generateD3= function(treeData){
 			  this.removeNode()
 			  var margin = {top: 40, right: 120, bottom: 20, left: 120},
@@ -383,8 +362,8 @@
 			      });
 			    } // wrap 
 			  } // update
-			};
+			}
 
 		}
 
-})();
+})()
