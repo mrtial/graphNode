@@ -1,9 +1,9 @@
 <div class="menu">
 	
 	<div ng-show='vm.nodeType === "button_postback"'>
-		<div class="fn" ng-show="vm.noChild" ng-hide="vm.duplicate">Add Message 
-			<input class="new_text" type="" name="" placeholder="(optional prefix)" ng-model="vm.prefix">
-			<button class="btn btn-primary btn-sm" ng-click="vm.addNode(vm.prefix)">Add</button>
+		<div class="fn" ng-show="vm.noChild" ng-hide="vm.duplicate" ng-click="vm.addNode()">Add Message 
+			<!-- <input class="new_text" type="" name="" placeholder="(optional prefix)" ng-model="vm.prefix"> -->
+			<!-- <button class="btn btn-primary btn-sm" ng-click="vm.addNode(vm.prefix)">Add</button> -->
 		</div>
 		<div class="fn" ng-click="vm.deleteNode()">Delete Button</div>
 		<div class="fn" ng-click="vm.deleteAllNode()" ng-hide="vm.duplicate">Delete All</div>

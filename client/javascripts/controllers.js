@@ -85,12 +85,11 @@
   			vm.open = false;
   			vm.menuShow = false;
   		} 
-  	}
+  	};
 
 	  // TOGGLE MENU
 	  // =================================================
 	  vm.toggleMenu = function(e){
-	  	// console.log(obj);
 	  	// show menu at mouse click position
 	  	var menuBox = document.getElementsByClassName('menu')[0];
 
@@ -101,12 +100,9 @@
 	  	if(e.target.tagName==="rect" || e.target.parentElement.previousSibling.tagName ==="rect"){
 	  		vm.menuShow = true;
 	  		var obj = e.target.__data__ || e.target.parentElement.previousSibling.__data__ ;
-	  		// console.log(obj)
 
 	  		// find current node in vm.data
 	  		// bind current node json to $rootScope
-
-
 
 	  		if (obj.button){
 	  			var jsonData = findNode(obj.parent.id, vm.data);
@@ -147,8 +143,6 @@
 	  		} else{
 	  			vm.duplicate=false;
 	  		};
-
-	  		console.log(vm.duplicate)
 
 	  		// btn & postback
 	  		if(obj.button && obj.payload_type === "postback"){
@@ -206,12 +200,21 @@
 	  // 	vm.menuShow = false;
 	  // 	$d3.generateD3(vm.treeData);
 	  // }
-	  vm.addNode = function(text){
+	  vm.addNode = function(){
 	  	vm.errorMsg = '';
 	  	vm.menuShow = false;
-	  	if(vm.currentNode.button){
+	  	
+	  	// Get parent prefix
+	  	var parentPrefix='';
+	  	
 
-	  		$api.getNextID(text)
+	  	if(vm.currentNode.button){
+	  		// add message
+	  		if(vm.currentNode.parent.id){
+	  			parentPrefix = vm.currentNode.parent.id;
+	  		}
+
+	  		$api.getNextID(parentPrefix)
 	  		.then(function success (response){
 	  			$api.postData("_id=" + response.data + "&payload_type=message&message_text=New Message")
 		  		.then(function success(){
@@ -232,10 +235,12 @@
 
 	  		
 	  	}else{
+	  		// add button
+				parentPrefix = vm.currentNode.id;
 
-	  		$api.getNextID(text).then(function success(response){
+	  		$api.getNextID(parentPrefix).then(function success(response){
 	  			
-				var button = vm.data.filter(function(d){return(d._id === vm.currentID )})[0].buttons
+				var button = vm.data.filter(function(d){return(d._id === vm.currentID );})[0].buttons;
 
 		  	  	button.push({
 					"type": "postback",
@@ -335,7 +340,6 @@
 
 	  	}else if( "parent" in vm.currentNode){
 	  		var parent_id = vm.currentNode.parent.parent.id;
-	  		debugger
 		  	var parent_button = vm.data.filter(function(d){return(d._id === parent_id )})[0].buttons;
 		  	parent_button.filter(function(d){return(d.next_node_id === vm.currentID)})[0].next_node_id = "";
 		  	$api.deleteData(vm.currentID).then(function success(){
@@ -404,7 +408,6 @@
 	  	vm.menuShow = false;
 	  	vm.open = false;
 		var currentID = vm.currentNode.button?vm.currentNode.parent.id:vm.currentNode.id;
-		// console.log(JSONtoString(vm.json));
 
 	  	$api.updateData(currentID, JSONtoString(vm.json)).then(function(){
 	  			vm.getData(vm.nodeID);
@@ -493,78 +496,9 @@
 						}
 					}
 				
-				})
+				});
 			}
 	
-		})
-	}
-
-	// D3 FUNCTION
-	// =================================================
-	// function delete_node(node_name,treeData){
-	  
-	//   if('children' in treeData)
-	//   {
-	//     treeData.children.forEach(function(t,i){
-	//     if(t.id === node_name){
-	//         treeData.children.splice(i,1);
-	//     }else{
-	//       t = $d3.delete_node(node_name,t);
-	//     }
-	//   });
-	//   }
-	//   return treeData;
-	// }
-
-	// var temp=0;
-
-	// function add_node(node_name,treeData){
-
-
-	//   if(treeData.id === node_name){
-	//   	var default_msg = { 
-	// 				"id" : "temp"+temp,
-	// 				"text" : "New message",
-	// 				"button" : false,
-	// 				"hidden" : false,
-	// 				"payload_type" : "message",
-	// 				"children" : []
-	// 			 };
-	// 	temp = temp +1;	
-		
- //    	if(treeData.button === true){
- //    		treeData.children=[default_msg];
- //    	}else{
- //    		var max_n = 0;
-
- //    		if('children' in treeData)
- //    		{
- //    			treeData.children.forEach(function(d){
-	// 					max_n = Math.max(max_n, parseInt(d.id.replace( treeData.id + "_button" ,"")))
-	// 				});
- //    		}else{
- //    			treeData.children = [];
- //    		}
-
-	// 			treeData.children.push({
-	// 				"id" : treeData.id + "_button" + (max_n +1),
-	// 				"text" : "button",
-	// 				"button" : true,
-	// 				"hidden" : false,
-	// 				"payload_type" : "postback",
-	// 				"children" : [default_msg]
-	// 			});
-
- //    	}
-	//   }
-
-
-	//   if('children' in treeData)
-	//   {
-	//     treeData.children.forEach(function(t,i){
-	//       t = addNode_node(node_name,t);
-	//    	});}
-	//   return treeData;
-	// }
-
-})()
+		});
+	};
+})();
