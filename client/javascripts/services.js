@@ -179,6 +179,7 @@
 			}
 
 
+			
 			this.generateD3= function(treeData){
 			  this.removeNode()
 			  var margin = {top: 40, right: 120, bottom: 20, left: 120},
