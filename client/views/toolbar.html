@@ -26,7 +26,7 @@
 
 	<div class="box">
    <ul>
-    <li ng-repeat="node in vm.showAllNode | filter:{_id:vm.filterText}| limitTo:vm.quantity">{{node._id}}</li>
+    <li ng-repeat="node in vm.showAllNode | filter:{_id:vm.filterText}">{{node._id}}</li>
    </ul>
 	</div>
 

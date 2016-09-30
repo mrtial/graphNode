@@ -6,7 +6,6 @@
 		var vm = this;
 		vm.menuShow = false;
 		vm.errorMsg = '';
-		vm.quantity = 100;
 
 		// Toolbar Function
 		// =================================================
