@@ -211,7 +211,8 @@
 	  	if(vm.currentNode.button){
 	  		// add message
 	  		if(vm.currentNode.parent.id){
-	  			parentPrefix = vm.currentNode.parent.id;
+	  			parentPrefix = vm.currentNode.parent.id.replace(/_\d+$/g,'');
+	  			console.log(parentPrefix);
 	  		}
 
 	  		$api.getNextID(parentPrefix)
@@ -236,7 +237,10 @@
 	  		
 	  	}else{
 	  		// add button
-				parentPrefix = vm.currentNode.id;
+
+				parentPrefix = vm.currentNode.id.replace(/_\d+$/g,'');
+	  	  console.log(parentPrefix);
+
 
 	  		$api.getNextID(parentPrefix).then(function success(response){
 	  			

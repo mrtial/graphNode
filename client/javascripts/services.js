@@ -93,7 +93,6 @@
 			// POST /api/v1/node/next-id HTTP/1.1
 			this.getNextID = function(prefix){
 				if(prefix){ prefix="prefix="+prefix}
-				console.log(prefix)
 				return $http({
 					method: 'POST',
 					url: `http://remissionaire-staging.herokuapp.com/api/v1/node/next-id`,
