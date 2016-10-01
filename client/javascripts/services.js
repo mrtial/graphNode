@@ -321,7 +321,7 @@
 			        }
 
 			       })
-			   /* debugger*/
+			    d3.selectAll("svg").attr("height", LayerLine.reduce((a,b)=> a+b) + LayerLine.length*20+200)
 			    // Declare the links…
 			    var link = svg.selectAll("path.link")
 			      .data(links, function(d) { return d.target.id; });
